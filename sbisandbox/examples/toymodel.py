@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
 import torch
-from torch.distributions import Uniform, MultivariateNormal, Distribution
+from torch.distributions import Uniform, Independent, MultivariateNormal, Distribution
+
 
 class ToyModel(ABC):
     def __init__(self, ndim) -> None:
@@ -25,13 +26,13 @@ class ToyModel(ABC):
     def simulator(self, params):
         raise NotImplementedError
 
-    
+
 class UniformPriorMixin:
     @property
     @abstractmethod
     def low(self):
         raise NotImplementedError
-    
+
     @property
     @abstractmethod
     def high(self):
@@ -39,7 +40,8 @@ class UniformPriorMixin:
 
     @property
     def prior(self) -> Distribution:
-        return Uniform(low=self.low, high=self.high)
+        dist = Uniform(low=self.low, high=self.high)
+        return Independent(dist, 1)
 
 
 class MultivariateNormalMixin:
@@ -50,7 +52,7 @@ class MultivariateNormalMixin:
     @abstractmethod
     def covariance_matrix(self, params: torch.Tensor) -> torch.Tensor:
         raise NotImplementedError
-    
+
     def simulator(self, params: torch.Tensor) -> torch.Tensor:
         loc = self.loc(params)
         covariance_matrix = self.covariance_matrix(params)

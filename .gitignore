@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+sbi-logs/
+
 # Distribution / packaging
 .Python
 build/

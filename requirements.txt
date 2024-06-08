@@ -2,3 +2,4 @@ torch
 sbi
 swyft
 matplotlib
+seaborn

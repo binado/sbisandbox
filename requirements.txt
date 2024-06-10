@@ -1,5 +1,6 @@
 torch
-sbi
 swyft
 matplotlib
 seaborn
+sbi @ git+https://github.com/binado/sbi.git@7900af0e1f70b394e5bb85cfe706c176325be650
+-e git+https://github.com/binado/sbibench.git@ac7cd328ba3d6d0f2931e991ab1def30aa792931#egg=sbisandbox

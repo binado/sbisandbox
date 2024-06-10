@@ -1,6 +1,7 @@
 import math
 
 import torch
+from torch.distributions import Normal
 import swyft
 
 from .toymodel import ToyModel, UniformPriorMixin
@@ -10,6 +11,8 @@ class TwoMoonsToyModel(UniformPriorMixin, ToyModel):
     def __init__(self):
         ndim = 2
         super().__init__([ndim, ndim])
+        self.r_dist = Normal(0.1, 0.01)
+        self.offset = torch.tensor([0.25, 0.0])
 
     @property
     def low(self):
@@ -22,11 +25,21 @@ class TwoMoonsToyModel(UniformPriorMixin, ToyModel):
     def simulator(self, params: torch.Tensor) -> torch.Tensor:
         nsamples = params.shape[0]
         a = -0.5 + math.pi * torch.rand(nsamples)
-        r = 0.1 + 0.01 * torch.randn(nsamples)
-        p = torch.stack((r * torch.cos(a) + 0.25, r * torch.sin(a)), dim=1)
+        r = self.r_dist.sample((nsamples,))
+        p = torch.stack((r * torch.cos(a), r * torch.sin(a)), dim=1) + self.offset
         abssum = torch.abs(torch.sum(params, 1))
         diff = params[:, 0] - params[:, 1]
         return p - torch.stack((abssum, diff), dim=1) / math.sqrt(2)
+
+    def loglike(self, params: torch.Tensor, x: torch.Tensor) -> torch.Tensor:
+        abssum = torch.abs(torch.sum(params, 1))
+        diff = params[:, 0] - params[:, 1]
+        # (-|p1 + p2|, p1 - p2) / sqrt(2)
+        rotated_params = torch.stack((abssum, diff), dim=1) / math.sqrt(2)
+        p = x + rotated_params - self.offset
+        # r is normally distributed as N(0.1, 0.01)
+        r = torch.sum(p**2)
+        return self.r_dist.log_prob(r)
 
 
 class TwoMoonsSwyftSimulator(swyft.Simulator):

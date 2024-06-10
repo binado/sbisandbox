@@ -5,6 +5,10 @@ from sbi.utils.user_input_checks import (
 )
 
 
+def if_none_else(a, b):
+    return a if a is not None else b
+
+
 def validate_model(prior, simulator):
     # Check prior, return PyTorch prior.
     _prior, num_parameters, prior_returns_numpy = process_prior(prior)

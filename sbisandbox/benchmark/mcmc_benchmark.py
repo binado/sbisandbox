@@ -1,12 +1,15 @@
-from sbisandbox.toymodel import ToyModel
-from ..samplers import get_sampler
+import pyro
+
+from ..toymodel import ToyModel
+from ..samplers import PyroMCMCPosterior
 
 from .benchmark import Benchmark
 
 
 class MCMCBenchmark(Benchmark):
     def __init__(
-        self, toy_model: ToyModel, seed: int, method: str = "nuts_pyro", **kwargs
+        self, toy_model: ToyModel, seed: int, method: str = "NUTS", **kwargs
     ) -> None:
+        pyro.set_rng_seed(seed)
         super().__init__(toy_model, seed)
-        self.posterior = get_sampler(toy_model, method, **kwargs)
+        self.posterior = PyroMCMCPosterior(toy_model, method, **kwargs)

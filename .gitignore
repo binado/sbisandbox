@@ -7,6 +7,7 @@ __pycache__/
 *.so
 
 sbi-logs/
+.DS_Store
 
 # Distribution / packaging
 .Python

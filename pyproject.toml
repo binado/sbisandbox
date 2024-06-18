@@ -19,7 +19,7 @@ dynamic = ["dependencies", "version"]
 Homepage = "https://github.com/binado/sbisandbox"
 
 [project.optional-dependencies]
-dev = ['pre-commit', 'ruff']
+dev = ['pre-commit', 'ruff', 'pytest']
 
 [tool.setuptools.packages.find]
 include = ['sbisandbox*']

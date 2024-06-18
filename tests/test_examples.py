@@ -1,6 +1,6 @@
 import pytest
+from itertools import product
 
-import torch
 from torch.distributions import Distribution
 
 from sbisandbox.examples import (
@@ -22,17 +22,18 @@ def get_model(model: str):
     return dict(zip(__models__, model_cls)).get(model)()
 
 
-@pytest.mark.parametrize("model_name", __models__)
+@pytest.mark.parametrize("model_name,batch_size", product(__models__, (1, 10, 100)))
 class TestToyModels:
-    def test_prior(self, model_name):
+    def test_prior(self, model_name, batch_size):
         model = get_model(model_name)
         prior = model.prior
         assert isinstance(prior, Distribution)
         assert prior.event_shape == model.theta_event_shape
+        prior_samples = prior.sample((batch_size,))
+        assert prior_samples.shape == (batch_size, *model.theta_event_shape)
 
-    @pytest.mark.parametrize("batch_size", (1, 10, 100))
     def test_simulator(self, model_name, batch_size):
         model = get_model(model_name)
-        theta = torch.zeros((batch_size, model.params_dimensionality))
+        theta = model.prior.sample((batch_size,))
         samples = model.simulator(theta)
         assert samples.shape == (batch_size, *model.x_event_shape)

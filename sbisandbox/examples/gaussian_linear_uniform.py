@@ -1,13 +1,16 @@
 import torch
 
-from ..toymodel import ToyModel, UniformPriorMixin, MultivariateNormalMixin
+import pyro
+import pyro.distributions as dist
+
+from ..toymodel import ToyModel, UniformPriorMixin
 
 
-class GaussianLinearUniformToyModel(
-    UniformPriorMixin, MultivariateNormalMixin, ToyModel
-):
-    def __init__(self, nparams=10, ndata=10):
-        super(ToyModel).__init__((nparams, ndata))
+class GaussianLinearUniformToyModel(UniformPriorMixin, ToyModel):
+    def __init__(self, n: int = 10, cov: float = 0.1):
+        super().__init__(theta_event_shape=(n,), x_event_shape=(n,))
+        self.prior_loc = torch.zeros(n)
+        self.covariance_matrix = cov * torch.eye(n)
 
     @property
     def low(self):
@@ -17,8 +20,9 @@ class GaussianLinearUniformToyModel(
     def high(self):
         return torch.ones(self.params_dimensionality)
 
-    def loc(self, params: torch.Tensor) -> torch.Tensor:
-        return params
+    def _pyro_model(self):
+        theta = pyro.sample("theta", self.prior)
+        return pyro.sample("x", dist.MultivariateNormal(theta, self.covariance_matrix))
 
-    def covariance_matrix(self, params: torch.Tensor) -> torch.Tensor:
-        return 0.1 * torch.eye(params.shape)
+    def loc(self, theta: torch.Tensor) -> torch.Tensor:
+        return theta

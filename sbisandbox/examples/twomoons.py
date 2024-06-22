@@ -28,27 +28,51 @@ class TwoMoonsToyModel(UniformPriorMixin, ToyModel):
         return torch.ones(self.theta_event_shape[0])
 
     def _pyro_model(self) -> torch.Tensor:
-        offset = pyro.param("offset", self.offset)
-        theta_1 = pyro.sample("theta_1", dist.Uniform(low=-1, high=1))
-        theta_2 = pyro.sample("theta_2", dist.Uniform(low=-1, high=1))
-        a = pyro.sample("a", dist.Uniform(low=-0.5 * math.pi, high=0.5 * math.pi))
-        r = pyro.sample("r", dist.Normal(loc=0.1, scale=0.01))
-        p = torch.stack((r * torch.cos(a), r * torch.sin(a)), dim=1) + offset
-        abssum = torch.abs(theta_1 + theta_2)
-        diff = theta_1 - theta_2
-        x = pyro.deterministic(
-            "x", p - torch.stack((abssum, diff), dim=1) / math.sqrt(2)
+        # offset = pyro.param("offset", lambda: torch.tensor([0.25, 0.0], requires_grad=True))
+        theta = pyro.sample("theta", self.prior)
+        a = pyro.sample(
+            "a", dist.Uniform(low=-0.5 * math.pi, high=0.5 * math.pi)
+        ).unsqueeze(1)
+        r = pyro.sample("r", dist.Normal(loc=0.1, scale=0.01)).unsqueeze(1)
+        p = r * torch.cat((torch.cos(a), torch.sin(a)), dim=-1) + self.offset
+        abssum = torch.abs(torch.sum(theta, dim=-1)).unsqueeze(1)
+        diff = torch.diff(theta)
+        # x = pyro.deterministic(
+        #     "x", p - torch.stack((abssum, diff), dim=1) / math.sqrt(2)
+        # )
+        # return x
+        return p - torch.cat((abssum, diff), dim=-1) / math.sqrt(2)
+
+    def get_posterior_samples(self, shape: torch.Size, x: torch.Tensor) -> torch.Tensor:
+        x_to_shape = x.expand(shape + self.theta_event_shape)
+        a = (
+            dist.Uniform(low=-0.5 * math.pi, high=0.5 * math.pi)
+            .sample(shape)
+            .unsqueeze(-1)
         )
-        return x
+        r = dist.Normal(loc=0.1, scale=0.01).sample(shape).unsqueeze(-1)
+        p = r * torch.cat((torch.cos(a), torch.sin(a)), dim=-1) + self.offset
+        # Theta is rotated
+        rot_t = p - x_to_shape
+
+        # To perform the inverse rotation, we must first decide on the sign of \theta_1 + \theta_2
+        u = torch.rand(shape)
+        plus_rotated = torch.stack(
+            (rot_t[..., 0] + rot_t[..., 1], rot_t[..., 0] - rot_t[..., 1]), dim=-1
+        ) / math.sqrt(2)
+        minus_rotated = torch.stack(
+            (-rot_t[..., 0] + rot_t[..., 1], -rot_t[..., 0] - rot_t[..., 1]), dim=-1
+        ) / math.sqrt(2)
+        return torch.where(u.unsqueeze(-1) > 0.5, plus_rotated, minus_rotated)
 
     # def simulator(self, params: torch.Tensor) -> torch.Tensor:
     #     nsamples = params.shape[0]
-    #     a = -0.5 + math.pi * torch.rand(nsamples)
-    #     r = self.r_dist.sample((nsamples,))
-    #     p = torch.stack((r * torch.cos(a), r * torch.sin(a)), dim=1) + self.offset
-    #     abssum = torch.abs(torch.sum(params, 1))
-    #     diff = params[:, 0] - params[:, 1]
-    #     return p - torch.stack((abssum, diff), dim=1) / math.sqrt(2)
+    #     a = -0.5 * math.pi + math.pi * torch.rand((nsamples, 1))
+    #     r = self.r_dist.sample((nsamples, 1))
+    #     p = r * torch.cat((torch.cos(a), torch.sin(a)), dim=-1) + self.offset
+    #     abssum = torch.abs(torch.sum(params, dim=-1)).unsqueeze(1)
+    #     diff = -torch.diff(params)
+    #     return p - torch.cat((abssum, diff), dim=-1) / math.sqrt(2)
     # def simulator(self, params: torch.Tensor) -> torch.Tensor:
     #     conditioned_model = pyro.poutine.condition(
     #         self._pyro_model,

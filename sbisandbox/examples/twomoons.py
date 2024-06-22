@@ -21,11 +21,11 @@ class TwoMoonsToyModel(UniformPriorMixin, ToyModel):
 
     @property
     def low(self):
-        return -1 * torch.ones(self.params_dimensionality)
+        return -1 * torch.ones(self.theta_event_shape[0])
 
     @property
     def high(self):
-        return torch.ones(self.params_dimensionality)
+        return torch.ones(self.theta_event_shape[0])
 
     def _pyro_model(self) -> torch.Tensor:
         offset = pyro.param("offset", self.offset)

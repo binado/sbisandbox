@@ -36,8 +36,3 @@ class SNLEBenchmark(NeuralBenchmark):
         )
         new_proposal = posterior.set_default_x(x_0) if x_0 is not None else posterior
         return new_proposal, density_estimator
-
-    def sample(
-        self, num_samples: int, thin: int = 1, warmup_steps: int = 100
-    ) -> Tensor:
-        return super().sample(num_samples, thin=thin, warmup_steps=warmup_steps)

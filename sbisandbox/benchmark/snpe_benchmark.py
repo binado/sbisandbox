@@ -47,6 +47,3 @@ class SNPEBenchmark(NeuralBenchmark):
         else:
             proposal = posterior
         return proposal, density_estimator
-
-    def sample(self, num_samples: int) -> Tensor:
-        return super().sample(num_samples)

@@ -64,10 +64,14 @@ class ToyModel(ABC):
     def log_prob(self, params: Tensor, x: Tensor):
         return self.loglike(params, x) + self.prior.log_prob(params)
 
-    def get_observations(self, num_observations: int, seed: int):
+    def get_observations(self, num_observations: int, seed: int, **kwargs):
         _prior, _simulator = validate_model(self.prior, self.simulator)
         theta, x = simulate_for_sbi(
-            _simulator, proposal=_prior, num_simulations=num_observations, seed=seed
+            _simulator,
+            proposal=_prior,
+            num_simulations=num_observations,
+            seed=seed,
+            **kwargs,
         )
         return theta, x
 

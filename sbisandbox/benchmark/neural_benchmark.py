@@ -23,9 +23,13 @@ class NeuralBenchmark(Benchmark, ABC):
         self._training_time = None
         self._training_clock_ended = False
 
+        self._instance_kwargs = kwargs
         assert self.inference_cls is not None, "Must set inference_cls attribute"
-        self._inference = self.inference_cls(prior=self.prior, **kwargs)
         self.density_estimator = None
+        self.reset()
+
+    def reset(self):
+        self._inference = self.inference_cls(prior=self.prior, **self._instance_kwargs)
 
     @property
     def training_time(self):

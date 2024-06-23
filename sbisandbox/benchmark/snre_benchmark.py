@@ -26,7 +26,6 @@ class SNREBenchmark(NeuralBenchmark):
         x_0: Optional[Tensor] = None,
         posterior_kwargs: Optional[dict] = None,
         training_kwargs: Optional[dict] = None,
-        **kwargs,
     ):
         _training_kwargs = training_kwargs or {}
         _posterior_kwargs = posterior_kwargs or {}

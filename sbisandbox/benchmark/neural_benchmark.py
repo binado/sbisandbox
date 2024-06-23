@@ -46,7 +46,6 @@ class NeuralBenchmark(Benchmark, ABC):
         x_0: Optional[Tensor] = None,
         posterior_kwargs: Optional[dict] = None,
         training_kwargs: Optional[dict] = None,
-        **kwargs,
     ):
         raise NotImplementedError
 

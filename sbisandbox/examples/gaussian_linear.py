@@ -1,8 +1,9 @@
 import torch
-from torch.distributions import MultivariateNormal
+from torch import Tensor
 import pyro
 import pyro.distributions as dist
 
+from ..types import Shape
 from ..toymodel import ToyModel
 
 
@@ -18,6 +19,17 @@ class GaussianLinearToyModel(ToyModel):
 
     @property
     def prior(self):
-        return MultivariateNormal(
+        return dist.MultivariateNormal(
             self.prior_loc, covariance_matrix=self.covariance_matrix
+        )
+
+    def get_posterior_samples(self, shape: Shape, x: Tensor) -> Tensor:
+        covariance_matrix = 0.5 * self.covariance_matrix
+        loc = torch.matmul(
+            torch.matmul(covariance_matrix, self.precision_matrix), x.squeeze()
+        )
+        return (
+            dist.MultivariateNormal(loc=loc, covariance_matrix=covariance_matrix)
+            .expand(shape)
+            .sample()
         )

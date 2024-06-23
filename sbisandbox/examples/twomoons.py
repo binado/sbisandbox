@@ -6,6 +6,7 @@ import torch
 from torch.distributions import Normal
 import swyft
 
+from ..types import Shape
 from ..toymodel import ToyModel, UniformPriorMixin
 
 
@@ -43,7 +44,7 @@ class TwoMoonsToyModel(UniformPriorMixin, ToyModel):
         # return x
         return p - torch.cat((abssum, diff), dim=-1) / math.sqrt(2)
 
-    def get_posterior_samples(self, shape: torch.Size, x: torch.Tensor) -> torch.Tensor:
+    def get_posterior_samples(self, shape: Shape, x: torch.Tensor) -> torch.Tensor:
         x_to_shape = x.expand(shape + self.theta_event_shape)
         a = (
             dist.Uniform(low=-0.5 * math.pi, high=0.5 * math.pi)

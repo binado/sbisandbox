@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
-import torch
 from torch import Tensor
 from torch.distributions import MultivariateNormal, Distribution
 import pyro
@@ -8,12 +8,11 @@ import pyro.distributions as dist
 from sbi.inference import simulate_for_sbi
 
 from .utils import validate_model
+from .types import Shape
 
 
 class ToyModel(ABC):
-    def __init__(
-        self, theta_event_shape: torch.Size, x_event_shape: torch.Size
-    ) -> None:
+    def __init__(self, theta_event_shape: Shape, x_event_shape: Shape) -> None:
         self.theta_event_shape = theta_event_shape
         self.x_event_shape = x_event_shape
         self.labels = map(
@@ -35,28 +34,25 @@ class ToyModel(ABC):
     def prior(self) -> Distribution:
         raise NotImplementedError
 
-    def _prior_model(self):
-        return pyro.sample("theta", self.prior)
-
     @abstractmethod
-    def _pyro_model(self):
+    def _pyro_model(self) -> Tensor:
         raise NotImplementedError
 
-    def _simulator_from_pyro_model(self, theta: Tensor):
-        _data = {"theta": theta}
-        return pyro.poutine.condition(self._pyro_model, data=_data)
-
-    def pyro_model_to_mcmc(self, x: Tensor):
-        _data = {"x": x}
-        return pyro.poutine.condition(self._pyro_model, data=_data)
-
-    def simulator(self, theta: Tensor) -> Tensor:
-        @pyro.poutine.condition(data={"theta": theta})
-        def _simulator():
-            with pyro.plate("data", theta.shape[0]):
+    def conditioned_model(
+        self, input: Tensor, name: str, plate_name: Optional[str] = "input"
+    ) -> Tensor:
+        @pyro.poutine.condition(data={name: input})
+        def _conditioned_model() -> Tensor:
+            with pyro.plate("data", input.shape[0]):
                 return self._pyro_model()
 
-        return _simulator()
+        return _conditioned_model()
+
+    def pyro_model_to_mcmc(self, x: Tensor) -> Tensor:
+        return self.conditioned_model(x, name="x")
+
+    def simulator(self, theta: Tensor) -> Tensor:
+        return self.conditioned_model(theta, name="theta")
 
     def loglike(self, params: Tensor, x: Tensor) -> Tensor:
         raise NotImplementedError

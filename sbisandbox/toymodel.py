@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from torch import Tensor
-from torch.distributions import MultivariateNormal, Distribution
+from torch.distributions import Distribution
 import pyro
 import pyro.distributions as dist
 from sbi.inference import simulate_for_sbi
@@ -89,28 +89,3 @@ class UniformPriorMixin:
     @property
     def prior(self):
         return self._prior_dist()
-
-
-class MultivariateNormalMixin:
-    theta_independtly_sampled = False
-
-    @abstractmethod
-    def loc(self, theta: Tensor) -> Tensor:
-        raise NotImplementedError
-
-    @abstractmethod
-    def covariance_matrix(self, theta: Tensor) -> Tensor:
-        raise NotImplementedError
-
-    def _dist(self, theta: Tensor) -> MultivariateNormal:
-        loc = self.loc(theta)
-        covariance_matrix = self.covariance_matrix(theta)
-        return dist.MultivariateNormal(loc, covariance_matrix=covariance_matrix)
-
-    def _pyro_model(self):
-        theta = self._prior_model()
-        _dist = self._dist(theta)
-        return pyro.sample("x", _dist)
-
-    def loglike(self, theta: Tensor, x: Tensor) -> Tensor:
-        return self._dist(theta).log_prob(x)

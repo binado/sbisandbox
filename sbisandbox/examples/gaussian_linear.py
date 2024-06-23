@@ -12,6 +12,7 @@ class GaussianLinearToyModel(ToyModel):
         super().__init__(theta_event_shape=(n,), x_event_shape=(n,))
         self.prior_loc = torch.zeros(n)
         self.covariance_matrix = cov * torch.eye(n)
+        self.precision_matrix = torch.eye(n) / cov
 
     def _pyro_model(self):
         theta = pyro.sample("theta", self.prior)

@@ -6,6 +6,7 @@ from torch.distributions import Distribution
 from sbisandbox.examples import (
     GaussianLinearToyModel,
     GaussianLinearUniformToyModel,
+    GaussianMixtureToyModel,
     TwoMoonsToyModel,
     SLCPToyModel,
     __models__,
@@ -16,6 +17,7 @@ def get_model(model: str):
     model_cls = (
         GaussianLinearToyModel,
         GaussianLinearUniformToyModel,
+        GaussianMixtureToyModel,
         TwoMoonsToyModel,
         SLCPToyModel,
     )

@@ -20,7 +20,7 @@ class NeuralBenchmark(Benchmark, ABC):
 
     def __init__(self, toy_model: ToyModel, seed: int, **kwargs) -> None:
         super().__init__(toy_model, seed)
-        self._training_time = None
+        self._training_time = 0.0
         self._training_clock_ended = False
 
         self._instance_kwargs = kwargs

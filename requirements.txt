@@ -1,6 +1,0 @@
-arviz
-matplotlib
-sbi @ git+https://github.com/binado/sbi.git@7900af0e1f70b394e5bb85cfe706c176325be650
-swyft
-pyro-ppl
-torch

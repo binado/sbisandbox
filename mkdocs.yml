@@ -5,6 +5,7 @@ repo_url: https://github.com/binado/sbisandbox
 site_author: Bernardo Porto Veronese
 theme:
   name: material
+  favicon: img/favicon.png
   icon:
     logo: material/book
   font:

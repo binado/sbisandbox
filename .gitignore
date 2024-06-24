@@ -6,8 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+site/
 sbi-logs/
 .DS_Store
+pyrightconfig.json
 
 # Distribution / packaging
 .Python

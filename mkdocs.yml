@@ -32,7 +32,7 @@ nav:
   - About: about.md
   - Installation: install.md
   - Glossary:
-      - glossary/amortized.md
+      - glossary/amortization.md
       - glossary/nle.md
       - glossary/npe.md
       - glossary/nre.md

@@ -5,11 +5,40 @@ repo_url: https://github.com/binado/sbisandbox
 site_author: Bernardo Porto Veronese
 theme:
   name: material
+  icon:
+    logo: material/book
+  font:
+    text: Inter
+  features:
+    - content.code.copy
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: teal
+      toggle:
+        icon: material/brightness-7
+
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 nav:
   - Home: index.md
-  - Resources: resources.md
+  - About: about.md
+  - Installation: install.md
+  - Glossary:
+      - glossary/nle.md
+      - glossary/npe.md
+      - glossary/nre.md
+      - glossary/nflow.md
+      - glossary/simulator.md
   - Tutorials:
       - Introduction: tutorials/introduction.md
+  - Resources: resources.md
 markdown_extensions:
   - toc:
       permalink: true
@@ -23,6 +52,11 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
 extra_javascript:
   - js/mathjax.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6

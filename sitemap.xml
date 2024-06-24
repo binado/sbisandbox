@@ -6,7 +6,52 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://binado.github.io/sbisandbox/about/</loc>
+         <lastmod>2024-06-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://binado.github.io/sbisandbox/install/</loc>
+         <lastmod>2024-06-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://binado.github.io/sbisandbox/resources/</loc>
+         <lastmod>2024-06-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://binado.github.io/sbisandbox/glossary/</loc>
+         <lastmod>2024-06-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://binado.github.io/sbisandbox/glossary/nflow/</loc>
+         <lastmod>2024-06-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://binado.github.io/sbisandbox/glossary/nle/</loc>
+         <lastmod>2024-06-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://binado.github.io/sbisandbox/glossary/npe/</loc>
+         <lastmod>2024-06-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://binado.github.io/sbisandbox/glossary/nre/</loc>
+         <lastmod>2024-06-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://binado.github.io/sbisandbox/glossary/simulator/</loc>
+         <lastmod>2024-06-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://binado.github.io/sbisandbox/tutorials/</loc>
          <lastmod>2024-06-24</lastmod>
          <changefreq>daily</changefreq>
     </url>

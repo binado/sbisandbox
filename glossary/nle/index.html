@@ -10,22 +10,28 @@
         <meta name="author" content="Bernardo Porto Veronese">
       
       
+        <link rel="canonical" href="https://binado.github.io/sbisandbox/glossary/nle/">
       
       
+        <link rel="prev" href="../../install/">
       
-      <link rel="icon" href="/sbisandbox/assets/images/favicon.png">
+      
+        <link rel="next" href="../npe/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
     
     
       
-        <title>SBI Sandbox</title>
+        <title>Neural Likelihood Estimation (NLE) - SBI Sandbox</title>
       
     
     
-      <link rel="stylesheet" href="/sbisandbox/assets/stylesheets/main.6543a935.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
       
         
-        <link rel="stylesheet" href="/sbisandbox/assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -44,7 +50,7 @@
       
     
     
-    <script>__md_scope=new URL("/sbisandbox/",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -69,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#neural_likelihood_estimation_nle" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -81,7 +92,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/sbisandbox/." title="SBI Sandbox" class="md-header__button md-logo" aria-label="SBI Sandbox" data-md-component="logo">
+    <a href="../.." title="SBI Sandbox" class="md-header__button md-logo" aria-label="SBI Sandbox" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 22a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-6v7L9.5 7.5 7 9V2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12Z"/></svg>
@@ -101,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Neural Likelihood Estimation (NLE)
             
           </span>
         </div>
@@ -214,7 +225,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/sbisandbox/." title="SBI Sandbox" class="md-nav__button md-logo" aria-label="SBI Sandbox" data-md-component="logo">
+    <a href="../.." title="SBI Sandbox" class="md-nav__button md-logo" aria-label="SBI Sandbox" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 22a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-6v7L9.5 7.5 7 9V2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12Z"/></svg>
@@ -244,7 +255,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/sbisandbox/." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -264,7 +275,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/sbisandbox/about/" class="md-nav__link">
+      <a href="../../about/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -284,7 +295,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/sbisandbox/install/" class="md-nav__link">
+      <a href="../../install/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -301,17 +312,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -325,7 +338,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Glossary
@@ -336,10 +349,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/sbisandbox/glossary/nle/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Neural Likelihood Estimation (NLE)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -348,6 +381,44 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -360,7 +431,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/sbisandbox/glossary/npe/" class="md-nav__link">
+      <a href="../npe/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -381,7 +452,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/sbisandbox/glossary/nre/" class="md-nav__link">
+      <a href="../nre/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -402,7 +473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/sbisandbox/glossary/nflow/" class="md-nav__link">
+      <a href="../nflow/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -423,7 +494,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/sbisandbox/glossary/simulator/" class="md-nav__link">
+      <a href="../simulator/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -486,7 +557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/sbisandbox/tutorials/introduction/" class="md-nav__link">
+      <a href="../../tutorials/introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -514,7 +585,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/sbisandbox/resources/" class="md-nav__link">
+      <a href="../../resources/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -544,6 +615,34 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -555,8 +654,50 @@
             <div class="md-content" data-md-component="content">
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+  
+  
+
+
+<h1 id="neural_likelihood_estimation_nle">Neural Likelihood Estimation (NLE)<a class="headerlink" href="#neural_likelihood_estimation_nle" title="Permanent link">&para;</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<p>Neural Posterior Estimation (NPE) consists of training a neural density estimator with a simulated dataset to directly approximate the likelihood <span class="arithmatex">\(p(\boldsymbol{x} | \boldsymbol{\theta})\)</span>.</p>
+<p>The estimator is trained to minimize the loss function</p>
+<div class="arithmatex">\[
+    \mathcal{L}(\boldsymbol{\phi}) = \mathbb{E}_{\boldsymbol{\theta} \sim p(\boldsymbol{\theta})} \mathbb{E}_{\boldsymbol{x} \sim p(\boldsymbol{x} | \boldsymbol{\theta})} \left[-\log q_{\boldsymbol{\phi}} (\boldsymbol{\theta} | \boldsymbol{x}) \right],
+\]</div>
+<p>where <span class="arithmatex">\(\boldsymbol{\phi}\)</span> is the parameter vector of the neural network. The loss function attains a minimum at <span class="arithmatex">\(q_{\boldsymbol{\phi}} (\boldsymbol{\theta} | \boldsymbol{x}) = p(\boldsymbol{\theta} | \boldsymbol{x})\)</span>. Indeed, by writing it explicity,</p>
+<div class="arithmatex">\[
+    \mathcal{L} = -\iint d\boldsymbol{\theta} d\boldsymbol{x}  p(\boldsymbol{\theta}) p(\boldsymbol{x} | \boldsymbol{\theta}) \log q_{\boldsymbol{\phi}}(\boldsymbol{\theta} | \boldsymbol{x}),
+\]</div>
+<p>one can apply Bayes' theorem and commute the integrals to write
+$$
+\begin{split}
+    \mathcal{L} &amp;= -\int d\boldsymbol{x} p(\boldsymbol{x}) \int d\boldsymbol{\theta} p(\boldsymbol{\theta} | \boldsymbol{x}) \log q_{\boldsymbol{\phi}}(\boldsymbol{\theta} | \boldsymbol{x}) \
+    &amp;=D_{KL}\left[q_{\boldsymbol{\phi}}(\boldsymbol{\theta} | \boldsymbol{x}) \parallel p(\boldsymbol{\theta} | \boldsymbol{x}) \right] + \rm{const},
+\end{split}
+$$</p>
+<p>where the first term is recognized to be the conditional relative entropy between <span class="arithmatex">\(q_{\boldsymbol{\phi}}(\boldsymbol{\theta} | \boldsymbol{x})\)</span> and the true posterior distribution <span class="arithmatex">\(p(\boldsymbol{\theta} | \boldsymbol{x})\)</span>, which is zero if and only if the two measures are equal almost everywhere, and positive otherwise. The additional constant term does not depend on  <span class="arithmatex">\(q_{\boldsymbol{\phi}}\)</span> and equals</p>
+<div class="arithmatex">\[
+    \mathbb{E}_{\boldsymbol{\theta} \sim p(\boldsymbol{\theta})} \mathbb{E}_{\boldsymbol{x} \sim p(\boldsymbol{x} | \boldsymbol{\theta})} \left[-\log p(\boldsymbol{\theta} | \boldsymbol{x}) \right].
+\]</div>
+<p>A common implementation of the density estimator is a <a href="../nflow/">normalizing flow</a>.</p>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<p>[1]: Papamakarios, George, David Sterratt, and Iain Murray. "Sequential neural likelihood: Fast likelihood-free inference with autoregressive flows." The 22nd international conference on artificial intelligence and statistics. PMLR, 2019.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -590,12 +731,12 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "/sbisandbox/", "features": ["content.code.copy"], "search": "/sbisandbox/assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="/sbisandbox/assets/javascripts/bundle.ad660dcc.min.js"></script>
+      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
       
-        <script src="/sbisandbox/js/mathjax.js"></script>
+        <script src="../../js/mathjax.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       

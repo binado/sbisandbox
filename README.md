@@ -2,7 +2,7 @@
 
 This repository is dedicated to experiments with Simulation-based Inference (SBI). It uses the algorithms implemented in the [`sbi` package](https://github.com/sbi-dev/sbi/) (Tejero-Cantero et al., 2020).
 
-Take a look at the [notebooks](./notebooks) for tutorials!
+Take a look at [the documentation.](https://binado.github.io/sbisandbox).
 
 ## About Simulation-based Inference
 
@@ -29,6 +29,10 @@ If possible, we recommend creating a new `conda` environment first:
 ```bash
 conda create -n sbisandbox python=3.10 && conda activate sbisandbox
 ```
+
+## Acknowledgements
+
+This project uses the `sbi` package and was inspired by the `sbibm` benchmark suite.
 
 ## References
 

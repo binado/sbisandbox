@@ -3,29 +3,29 @@ from itertools import product
 
 from torch.distributions import Distribution
 
-from sbisandbox.examples import (
-    GaussianLinearToyModel,
-    GaussianLinearUniformToyModel,
-    GaussianMixtureToyModel,
-    TwoMoonsToyModel,
-    SLCPToyModel,
+from sbisandbox.benchmarks import (
+    GaussianLinearBenchmark,
+    GaussianLinearUniformBenchmark,
+    GaussianMixtureBenchmark,
+    TwoMoonsBenchmark,
+    SLCPBenchmark,
     __models__,
 )
 
 
 def get_model(model: str):
     model_cls = (
-        GaussianLinearToyModel,
-        GaussianLinearUniformToyModel,
-        GaussianMixtureToyModel,
-        TwoMoonsToyModel,
-        SLCPToyModel,
+        GaussianLinearBenchmark,
+        GaussianLinearUniformBenchmark,
+        GaussianMixtureBenchmark,
+        TwoMoonsBenchmark,
+        SLCPBenchmark,
     )
     return dict(zip(__models__, model_cls)).get(model)()
 
 
 @pytest.mark.parametrize("model_name,batch_size", product(__models__, (1, 10, 100)))
-class TestToyModels:
+class TestBenchmarks:
     def test_prior(self, model_name, batch_size):
         model = get_model(model_name)
         prior = model.prior

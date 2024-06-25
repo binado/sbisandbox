@@ -593,6 +593,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -844,6 +853,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -866,14 +884,22 @@
 <p>In this notebook, we will analyse the performance of Simulation-based inference algorithms in estimating the posterior distribution of the parameters defined in the Two Moons model.</p>
 <h2 id="the_two_moons_model">The Two Moons model<a class="headerlink" href="#the_two_moons_model" title="Permanent link">&para;</a></h2>
 <p>The parameters <span class="arithmatex">\(\boldsymbol{\theta} \in \mathbb{R}^2\)</span> are sampled from</p>
-<div class="arithmatex">\[ \theta_1 \sim \mathcal{U}([-1, 1])$$
-$$ \theta_2 \sim \mathcal{U}([-1, 1])\]</div>
+<div class="arithmatex">\[ \theta_1 \sim \mathcal{U}([-1, 1])\]</div>
+<div class="arithmatex">\[ \theta_2 \sim \mathcal{U}([-1, 1])\]</div>
 <p>The data <span class="arithmatex">\(\boldsymbol{x} \in \mathbb{R}^2\)</span> are generated as follows:</p>
-<ol>
-<li>Sample the latent variables <span class="arithmatex">\(<span class="arithmatex">\(\alpha \sim \mathcal{U}([-\pi/2, \pi/2])\)</span>\)</span> <span class="arithmatex">\(<span class="arithmatex">\(r \sim \mathcal{N}(\mu=0.1, \sigma=0.01)\)</span>\)</span></li>
-<li>Define <span class="arithmatex">\(<span class="arithmatex">\(p = (r \cos \alpha + 0.25, r \sin \alpha)\)</span>\)</span></li>
-<li>Output <span class="arithmatex">\(<span class="arithmatex">\(\boldsymbol{x} = p - \left(\frac{|\theta_1 + \theta_2|}{\sqrt{2}}, \frac{\theta_1 - \theta_2}{\sqrt{2}} \right)\)</span>\)</span></li>
-</ol>
+<ul>
+<li>Sample the latent variables </li>
+</ul>
+<div class="arithmatex">\[\alpha \sim \mathcal{U}([-\pi/2, \pi/2])\]</div>
+<div class="arithmatex">\[r \sim \mathcal{N}(\mu=0.1, \sigma=0.01)\]</div>
+<ul>
+<li>
+<p>Define <span class="arithmatex">\(<span class="arithmatex">\(p = (r \cos \alpha + 0.25, r \sin \alpha)\)</span>\)</span></p>
+</li>
+<li>
+<p>Output <span class="arithmatex">\(<span class="arithmatex">\(\boldsymbol{x} = p - \left(\frac{|\theta_1 + \theta_2|}{\sqrt{2}}, \frac{\theta_1 - \theta_2}{\sqrt{2}} \right)\)</span>\)</span></p>
+</li>
+</ul>
 <p>The name of the model comes from the shape of the posterior distribution <span class="arithmatex">\(p(\boldsymbol{\theta} | \boldsymbol{x})\)</span>: bimodal with a banana-shaped mass around the modes (a-la a crescent moon).</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">sys</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -932,7 +958,7 @@ Using matplotlib backend: module://matplotlib_inline.backend_inline
   fig.tight_layout()
 </code></pre></div>
 <p><img alt="png" src="../twomoons_files/twomoons_5_1.png" /></p>
-<p>We observe that the distribution for <span class="arithmatex">\(\boldsymbol{x}\)</span> has this rather triangular shape. We can have a quantitative understanding of this behaviour by calculating the likelihood function explicitly (or the posterior, rather, since the prior <span class="arithmatex">\(p(\boldsymbol{\theta})\)</span> is a constant.</p>
+<p>We observe that the distribution for <span class="arithmatex">\(\boldsymbol{x}\)</span> has this rather triangular shape. We can have a quantitative understanding of this behaviour by calculating the likelihood function explicitly (or the posterior, rather, since the prior <span class="arithmatex">\(p(\boldsymbol{\theta})\)</span> is a constant).</p>
 <div class="arithmatex">\[\begin{align*}
 p(\boldsymbol{\theta} | \boldsymbol{x}) &amp;= p(\boldsymbol{x} | \boldsymbol{\theta}) p(\boldsymbol{\theta})\\
 &amp;= p(\boldsymbol{\theta}) \int p(\boldsymbol{x}, r, \alpha | \boldsymbol{\theta})  dr \, d\alpha\\
@@ -1009,7 +1035,7 @@ p(\boldsymbol{\theta} | \boldsymbol{x}) &amp;= p(\boldsymbol{x} | \boldsymbol{\t
 <p>From the figure, it is clear that the effective support of the posterior is much smaller relative to the prior support <span class="arithmatex">\([0,1]^2\)</span>. Besides, from the fact that the two moons are separated by a (much larger) region of low posterior mass, we expect the performance of an MCMC to be very sensitive to the initialization strategy of the chains and the step size of the method.</p>
 <p>To gather reference samples from the posterior, we implement below a simple Metropolis-Hastings algorithm with the independent proposal distribution</p>
 <div class="arithmatex">\[ \boldsymbol{\theta}' | \boldsymbol{\theta} \sim 0.5\mathcal{N}(p_1, \sigma) + 0.5\mathcal{N}(p_2, \sigma),\]</div>
-<p>Where <span class="arithmatex">\(p_1 = (0.25, 0.25)\)</span> and <span class="arithmatex">\(p_2 = (-0.25, -0.25)\)</span> approximate the curvature center of the moons, and <span class="arithmatex">\(\sigma\)</span> is fixed.</p>
+<p>where <span class="arithmatex">\(p_1 = (0.25, 0.25)\)</span> and <span class="arithmatex">\(p_2 = (-0.25, -0.25)\)</span> approximate the curvature center of the moons, and <span class="arithmatex">\(\sigma\)</span> is fixed. With this choice of proposal, we expect to directly target the regions of concentrated posterior mass.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">torch.distributions</span> <span class="kn">import</span> <span class="n">MultivariateNormal</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
@@ -1111,7 +1137,7 @@ p(\boldsymbol{\theta} | \boldsymbol{x}) &amp;= p(\boldsymbol{x} | \boldsymbol{\t
 <p><img alt="png" src="../twomoons_files/twomoons_15_1.png" /></p>
 <p><img alt="png" src="../twomoons_files/twomoons_15_2.png" /></p>
 <p><img alt="png" src="../twomoons_files/twomoons_15_3.png" /></p>
-<p>Again, we observe a similar behaviour for the autocorrelation across the chains.</p>
+<p>Again, we observe a similar behaviour for the autocorrelation across the chains. The relative effective sample size seems to stay constant at about 8%.</p>
 <p>Finally, we visualize our samples in a corner plot, discarding 1000 warmup steps.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">data_from_mcmc_trimmed</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">samples_from_mcmc</span><span class="p">,</span> <span class="n">warmup</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_pair</span><span class="p">(</span><span class="n">data_from_mcmc_trimmed</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">marginals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1121,7 +1147,7 @@ p(\boldsymbol{\theta} | \boldsymbol{x}) &amp;= p(\boldsymbol{x} | \boldsymbol{\t
       dtype=object)
 </code></pre></div>
 <p><img alt="png" src="../twomoons_files/twomoons_17_1.png" /></p>
-<p>Let us compare these results with samples from the true posterior, which obtain from explicitly inverting the simulator.</p>
+<p>Let us compare these results with samples from the true posterior, which we obtain from explicitly inverting the simulator.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">true_samples</span> <span class="o">=</span> <span class="n">two_moons</span><span class="o">.</span><span class="n">get_posterior_samples</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">data_from_true_samples</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">true_samples</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_pair</span><span class="p">(</span><span class="n">data_from_true_samples</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">marginals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1309,10 +1335,11 @@ array([[&lt;Axes: &gt;, None],
       dtype=object)
 </code></pre></div>
 <p><img alt="png" src="../twomoons_files/twomoons_26_2.png" /></p>
+<p>While NPE reconstructs the general shape of the posterior to a certain degree, we also observe leakage to regions outside the posterior support. This is a known problem with NPE.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">compare_marginals</span><span class="p">(</span><span class="n">data_from_npe</span><span class="p">,</span> <span class="s2">&quot;NPE&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p><img alt="png" src="../twomoons_files/twomoons_27_0.png" /></p>
-<p>The results seem to be...not good. Let us try the sequential version, SNPE:</p>
+<p><img alt="png" src="../twomoons_files/twomoons_28_0.png" /></p>
+<p>Let us try the sequential version, SNPE:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">snpe</span> <span class="o">=</span> <span class="n">SNPERunner</span><span class="p">(</span><span class="n">benchmark</span><span class="o">=</span><span class="n">two_moons</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">density_estimator</span><span class="o">=</span><span class="s2">&quot;nsf&quot;</span><span class="p">)</span>
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">num_rounds</span> <span class="o">=</span> <span class="mi">4</span>
 </span></code></pre></div>
@@ -1486,10 +1513,11 @@ array([[&lt;Axes: &gt;, None],
        [&lt;Axes: xlabel=&#39;$\\theta_1$&#39;, ylabel=&#39;$\\theta_2$&#39;&gt;, &lt;Axes: &gt;]],
       dtype=object)
 </code></pre></div>
-<p><img alt="png" src="../twomoons_files/twomoons_31_2.png" /></p>
+<p><img alt="png" src="../twomoons_files/twomoons_32_2.png" /></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">compare_marginals</span><span class="p">(</span><span class="n">data_from_snpe</span><span class="p">,</span> <span class="s2">&quot;SNPE&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p><img alt="png" src="../twomoons_files/twomoons_32_0.png" /></p>
+<p><img alt="png" src="../twomoons_files/twomoons_33_0.png" /></p>
+<p>Qualitatively, SNPE seems to perform worse than its non-sequential counterpart. Indeed, it is not always that case that sequential variants are more performant [1].</p>
 <h3 id="nre_and_snre">NRE and SNRE<a class="headerlink" href="#nre_and_snre" title="Permanent link">&para;</a></h3>
 <p>We first train 1 round of NRE, and generate samples using MCMC. Since the two posterior modes are far away from each other, we use multiple chains to avoid covering only one mode.</p>
 <p>We also experiment with different training hyperparameters.</p>
@@ -1573,11 +1601,11 @@ array([[&lt;Axes: &gt;, None],
        [&lt;Axes: xlabel=&#39;$\\theta_1$&#39;, ylabel=&#39;$\\theta_2$&#39;&gt;, &lt;Axes: &gt;]],
       dtype=object)
 </code></pre></div>
-<p><img alt="png" src="../twomoons_files/twomoons_36_2.png" /></p>
-<p>NRE seems to do a much better job than NPE in this benchmark for this configuration of hyperparameters.</p>
+<p><img alt="png" src="../twomoons_files/twomoons_38_2.png" /></p>
+<p>NRE seems to display less leakage compared to NPE, but the shapes of the moons are not well resolved. We also observe an asymmetry in the peak heights of the 1D marginals. Could it be corrected for with a better tuned MCMC?</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="n">compare_marginals</span><span class="p">(</span><span class="n">data_from_nre</span><span class="p">,</span> <span class="s2">&quot;NRE&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p><img alt="png" src="../twomoons_files/twomoons_38_0.png" /></p>
+<p><img alt="png" src="../twomoons_files/twomoons_40_0.png" /></p>
 <p>Let us try the sequential variant next. We decide on a number of rounds and split the simulation budget equally between them.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="n">snre</span> <span class="o">=</span> <span class="n">SNRERunner</span><span class="p">(</span><span class="n">benchmark</span><span class="o">=</span><span class="n">two_moons</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="n">num_rounds</span> <span class="o">=</span> <span class="mi">4</span>
@@ -1690,7 +1718,7 @@ Wall time: 3min 30s
    )
  ))
 </code></pre></div>
-<p>We see that the total training times are similar in order of magnitude; the sequential version trains for more rounds but with less data per round.</p>
+<p>We see that the total training times are similar in order of magnitude; the sequential version trains for more rounds but uses less data per round.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="n">samples_from_snre</span> <span class="o">=</span> <span class="n">snre</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x0</span><span class="p">)</span>
 </span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="n">data_from_snre</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">samples_from_snre</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 </span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_pair</span><span class="p">(</span><span class="n">data_from_snre</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">marginals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1705,10 +1733,15 @@ array([[&lt;Axes: &gt;, None],
        [&lt;Axes: xlabel=&#39;$\\theta_1$&#39;, ylabel=&#39;$\\theta_2$&#39;&gt;, &lt;Axes: &gt;]],
       dtype=object)
 </code></pre></div>
-<p><img alt="png" src="../twomoons_files/twomoons_43_2.png" /></p>
+<p><img alt="png" src="../twomoons_files/twomoons_45_2.png" /></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="n">compare_marginals</span><span class="p">(</span><span class="n">data_from_snre</span><span class="p">,</span> <span class="s2">&quot;SNRE&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p><img alt="png" src="../twomoons_files/twomoons_44_0.png" /></p>
+<p><img alt="png" src="../twomoons_files/twomoons_46_0.png" /></p>
+<p>The sequential variant here does improve the results, with better resolution of the shapes of the moons and a less siginificant assymetry in the marginals.</p>
+<p>The take-home message of this tutorial is that, much like MCMC, it is important to play around with different strategies and hyperparameters, which may have a high impact on performance. There is no ultimate algorithm that consistently performs better than the rest across different tasks.</p>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<p>[1]: Hermans, Joeri, et al. "A trust crisis in simulation-based inference? your posterior approximations can be unfaithful." arXiv preprint arXiv:2110.06581 (2021).</p>
+<p>[2]: Lueckmann, Jan-Matthis, et al. "Benchmarking simulation-based inference." International conference on artificial intelligence and statistics. PMLR, 2021.</p>
 
 
 

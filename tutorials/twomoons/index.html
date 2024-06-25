@@ -1,0 +1,1771 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Bernardo Porto Veronese">
+      
+      
+        <link rel="canonical" href="https://binado.github.io/sbisandbox/tutorials/twomoons/">
+      
+      
+        <link rel="prev" href="../introduction/">
+      
+      
+        <link rel="next" href="../../benchmarks/gaussian_linear/">
+      
+      
+      <link rel="icon" href="../../img/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+    
+    
+      
+        <title>Sequential x amortized - SBI Sandbox</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sequential_x_amortized_inference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SBI Sandbox" class="md-header__button md-logo" aria-label="SBI Sandbox" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 22a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-6v7L9.5 7.5 7 9V2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SBI Sandbox
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sequential x amortized
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/binado/sbisandbox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sbisandbox
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SBI Sandbox" class="md-nav__button md-logo" aria-label="SBI Sandbox" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 22a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-6v7L9.5 7.5 7 9V2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12Z"/></svg>
+
+    </a>
+    SBI Sandbox
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/binado/sbisandbox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sbisandbox
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Glossary
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Glossary
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/amortization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Amortized x sequential algorithms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/nle/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Neural Likelihood Estimation (NLE)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/npe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Neural Posterior Estimation (NPE)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/nre/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Neural Ratio Estimation (NRE)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/nflow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Normalizing flows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/simulator/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Simulator
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tutorials
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Sequential x amortized
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Sequential x amortized
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the_two_moons_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Two Moons model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using_sbi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using SBI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using SBI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npe_and_snpe" class="md-nav__link">
+    <span class="md-ellipsis">
+      NPE and SNPE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nre_and_snre" class="md-nav__link">
+    <span class="md-ellipsis">
+      NRE and SNRE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Benchmarks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Benchmarks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../benchmarks/gaussian_linear/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Gaussian Linear
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../benchmarks/gaussian_linear_uniform/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Gaussian Linear Uniform
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../benchmarks/gaussian_mixture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Gaussian Mixture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../benchmarks/slcp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SLCP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../benchmarks/two_moons/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Two Moons
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the_two_moons_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Two Moons model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using_sbi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using SBI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using SBI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npe_and_snpe" class="md-nav__link">
+    <span class="md-ellipsis">
+      NPE and SNPE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nre_and_snre" class="md-nav__link">
+    <span class="md-ellipsis">
+      NRE and SNRE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="sequential_x_amortized_inference">Sequential x amortized inference<a class="headerlink" href="#sequential_x_amortized_inference" title="Permanent link">&para;</a></h1>
+<p>In this notebook, we will analyse the performance of Simulation-based inference algorithms in estimating the posterior distribution of the parameters defined in the Two Moons model.</p>
+<h2 id="the_two_moons_model">The Two Moons model<a class="headerlink" href="#the_two_moons_model" title="Permanent link">&para;</a></h2>
+<p>The parameters <span class="arithmatex">\(\boldsymbol{\theta} \in \mathbb{R}^2\)</span> are sampled from</p>
+<div class="arithmatex">\[ \theta_1 \sim \mathcal{U}([-1, 1])$$
+$$ \theta_2 \sim \mathcal{U}([-1, 1])\]</div>
+<p>The data <span class="arithmatex">\(\boldsymbol{x} \in \mathbb{R}^2\)</span> are generated as follows:</p>
+<ol>
+<li>Sample the latent variables <span class="arithmatex">\(<span class="arithmatex">\(\alpha \sim \mathcal{U}([-\pi/2, \pi/2])\)</span>\)</span> <span class="arithmatex">\(<span class="arithmatex">\(r \sim \mathcal{N}(\mu=0.1, \sigma=0.01)\)</span>\)</span></li>
+<li>Define <span class="arithmatex">\(<span class="arithmatex">\(p = (r \cos \alpha + 0.25, r \sin \alpha)\)</span>\)</span></li>
+<li>Output <span class="arithmatex">\(<span class="arithmatex">\(\boldsymbol{x} = p - \left(\frac{|\theta_1 + \theta_2|}{\sqrt{2}}, \frac{\theta_1 - \theta_2}{\sqrt{2}} \right)\)</span>\)</span></li>
+</ol>
+<p>The name of the model comes from the shape of the posterior distribution <span class="arithmatex">\(p(\boldsymbol{\theta} | \boldsymbol{x})\)</span>: bimodal with a banana-shaped mass around the modes (a-la a crescent moon).</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">sys</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kn">import</span> <span class="nn">torch</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="kn">from</span> <span class="nn">sbi</span> <span class="kn">import</span> <span class="n">analysis</span> <span class="k">as</span> <span class="n">analysis</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="kn">from</span> <span class="nn">sbi</span> <span class="kn">import</span> <span class="n">utils</span> <span class="k">as</span> <span class="n">utils</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="kn">from</span> <span class="nn">sbisandbox.benchmarks</span> <span class="kn">import</span> <span class="n">TwoMoonsBenchmark</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="kn">from</span> <span class="nn">sbisandbox.runners</span> <span class="kn">import</span> <span class="n">SNPERunner</span><span class="p">,</span> <span class="n">SNRERunner</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="o">%</span><span class="n">matplotlib</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s1">&#39;retina&#39;</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">az</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;arviz-whitegrid&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>/Users/bernardoveronese/miniconda3/envs/sbibench/lib/python3.10/site-packages/threadpoolctl.py:1214: RuntimeWarning: 
+Found Intel OpenMP (&#39;libiomp&#39;) and LLVM OpenMP (&#39;libomp&#39;) loaded at
+the same time. Both libraries are known to be incompatible and this
+can cause random crashes or deadlocks on Linux when loaded in the
+same Python program.
+Using threadpoolctl may cause crashes or deadlocks. For more
+information and possible workarounds, please see
+    https://github.com/joblib/threadpoolctl/blob/master/multiple_openmp.md
+
+  warnings.warn(msg, RuntimeWarning)
+
+
+Using matplotlib backend: module://matplotlib_inline.backend_inline
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">two_moons</span> <span class="o">=</span> <span class="n">TwoMoonsBenchmark</span><span class="p">()</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">seed</span> <span class="o">=</span> <span class="mi">1998</span>
+</span></code></pre></div>
+<p>The <code>TwoMoonsBenchmark</code> class has built-in methods for the prior and the simulator <span class="arithmatex">\(\boldsymbol{x} | \boldsymbol{\theta}\)</span> of the two moons model. Let us generate observations of <span class="arithmatex">\((\boldsymbol{\theta}, \boldsymbol{x})\)</span> and visualize them as 2D histograms:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check prior, return PyTorch prior.</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">num_observations</span> <span class="o">=</span> <span class="mi">1000</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">theta</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">two_moons</span><span class="o">.</span><span class="n">get_observations</span><span class="p">(</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">num_observations</span><span class="o">=</span><span class="n">num_observations</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">simulation_batch_size</span><span class="o">=</span><span class="kc">None</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_kde</span><span class="p">(</span><span class="n">theta</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">theta</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">contour</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_dist</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">contour</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">ax1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">theta_1$&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">theta_2$&quot;</span><span class="p">)</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">ax2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">)</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>/var/folders/0p/lb2wpb5n0y7ggth5yzlvh_r80000gn/T/ipykernel_28488/4179056188.py:8: UserWarning: The figure layout has changed to tight
+  fig.tight_layout()
+</code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_5_1.png" /></p>
+<p>We observe that the distribution for <span class="arithmatex">\(\boldsymbol{x}\)</span> has this rather triangular shape. We can have a quantitative understanding of this behaviour by calculating the likelihood function explicitly (or the posterior, rather, since the prior <span class="arithmatex">\(p(\boldsymbol{\theta})\)</span> is a constant.</p>
+<div class="arithmatex">\[\begin{align*}
+p(\boldsymbol{\theta} | \boldsymbol{x}) &amp;= p(\boldsymbol{x} | \boldsymbol{\theta}) p(\boldsymbol{\theta})\\
+&amp;= p(\boldsymbol{\theta}) \int p(\boldsymbol{x}, r, \alpha | \boldsymbol{\theta})  dr \, d\alpha\\
+&amp;= p(\boldsymbol{\theta})\int p(\boldsymbol{x} | r, \alpha, \boldsymbol{\theta}) p(r, \alpha | \boldsymbol{\theta}) dr \, d\alpha\\
+&amp;= p(\boldsymbol{\theta})\int \delta(\boldsymbol{x} - \boldsymbol{x}(r, \alpha, \boldsymbol{\theta})) p(r) p(\alpha) dr \, d\alpha\\
+\end{align*}\]</div>
+<p>The delta function over <span class="arithmatex">\(\mathbb{R}^2\)</span> will fix both values of <span class="arithmatex">\(r\)</span> and <span class="arithmatex">\(\alpha\)</span> to the solution of</p>
+<div class="arithmatex">\[ \boldsymbol{x}(r, \alpha, \boldsymbol{\theta}) = \boldsymbol{x},\]</div>
+<p>where <span class="arithmatex">\(\boldsymbol{\theta}\)</span> and <span class="arithmatex">\(\boldsymbol{x}\)</span> are given, and <span class="arithmatex">\(\boldsymbol{x}(r, \alpha, \boldsymbol{\theta})\)</span> indicates the functional form of <span class="arithmatex">\(\boldsymbol{x}\)</span> as a function of the other variables. Hence, we find the posterior to be</p>
+<div class="arithmatex">\[\begin{equation*}
+ p(\boldsymbol{\theta} | \boldsymbol{x})= \begin{cases}
+ \frac{1}{4} \frac{1}{\pi} \frac{1}{\sqrt{2 \pi} 0.01} \exp \left\{ -\frac{1}{2} \left( \frac{r(\boldsymbol{\theta}, \boldsymbol{x}) - 0.1}{0.01} \right)^2 \right\}, &amp; \text{if } |\theta_1 + \theta_2| \geq \sqrt{2} (0.25 - x_1),\\
+0, &amp; \text{if } |\theta_1 + \theta_2| &lt; \sqrt{2} (0.25 - x_1),
+\end{cases}
+\end{equation*}\]</div>
+<p>where</p>
+<div class="arithmatex">\[ r(\boldsymbol{\theta}, \boldsymbol{x}) = \text{sgn} \left(|\theta_1 + \theta_2| - \sqrt{2} (0.25 - x_1) \right) \sqrt{\left(x_1  - 0.25 + \frac{|\theta_1 + \theta_2|}{\sqrt{2}}\right)^2 + \left(x_2 + \frac{\theta_1 - \theta_2}{\sqrt{2}}\right)^2}\]</div>
+<p>The region <span class="arithmatex">\(|\theta_1 + \theta_2| &lt; \sqrt{2} (0.25 - x_1)\)</span> corresponds to a solution with <span class="arithmatex">\(\cos \alpha &lt; 0\)</span>, which is not possible for <span class="arithmatex">\(\alpha \in (-\pi/2, \pi/2)\)</span>, thereby reducing the posterior support on <span class="arithmatex">\(\boldsymbol{\theta}\)</span>.</p>
+<p>We now consider the observation <span class="arithmatex">\(\boldsymbol{x}_0 = (0, 0)\)</span>, and plot the posterior <span class="arithmatex">\(p(\boldsymbol{\theta} | \boldsymbol{x}_0)\)</span> below.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span> <span class="nf">r_of_theta_x</span><span class="p">(</span><span class="n">theta1</span><span class="p">,</span> <span class="n">theta2</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">plus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta1</span> <span class="o">+</span> <span class="n">theta2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">minus</span> <span class="o">=</span> <span class="p">(</span><span class="n">theta1</span> <span class="o">-</span> <span class="n">theta2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">rsin</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">minus</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">rcos</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="mf">0.25</span> <span class="o">+</span> <span class="n">plus</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">sign_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rcos</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="k">return</span> <span class="n">sign_r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rsin</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">rcos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">def</span> <span class="nf">p_theta_given_x</span><span class="p">(</span><span class="n">theta1</span><span class="p">,</span> <span class="n">theta2</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">plus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta1</span> <span class="o">+</span> <span class="n">theta2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="n">minus</span> <span class="o">=</span> <span class="p">(</span><span class="n">theta1</span> <span class="o">-</span> <span class="n">theta2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="n">rsin</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">minus</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="n">rcos</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="mf">0.25</span> <span class="o">+</span> <span class="n">plus</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="n">sign_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rcos</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="n">r</span> <span class="o">=</span> <span class="n">sign_r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rsin</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">rcos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="n">chi</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.01</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    <span class="n">norm</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">)</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="n">prob</span> <span class="o">=</span> <span class="n">norm</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">chi</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    <span class="n">prob</span><span class="p">[</span><span class="n">rcos</span> <span class="o">*</span> <span class="n">sign_r</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    <span class="k">return</span> <span class="n">prob</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">theta1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">theta2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">tt1</span><span class="p">,</span> <span class="n">tt2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">theta1</span><span class="p">,</span> <span class="n">theta2</span><span class="p">)</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">r</span> <span class="o">=</span> <span class="n">r_of_theta_x</span><span class="p">(</span><span class="n">tt1</span><span class="p">,</span> <span class="n">tt2</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">a</span> <span class="o">=</span> <span class="mf">0.25</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">tt1</span><span class="p">,</span> <span class="n">tt2</span><span class="p">,</span> <span class="n">p_theta_given_x</span><span class="p">(</span><span class="n">tt1</span><span class="p">,</span> <span class="n">tt2</span><span class="p">,</span> <span class="n">x0</span><span class="p">),</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="n">ax_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">theta_1$&quot;</span><span class="p">,</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">theta_2$&quot;</span><span class="p">,</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="s2">&quot;xlim&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="s2">&quot;ylim&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;$p(</span><span class="se">\\</span><span class="s2">boldsymbol{</span><span class="se">\\</span><span class="s2">theta} | </span><span class="se">\\</span><span class="s2">boldsymbol</span><span class="si">{x}</span><span class="s2">)$&quot;</span><span class="p">,</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="p">}</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">ax_kwargs</span><span class="p">)</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># fig.tight_layout()</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>/var/folders/0p/lb2wpb5n0y7ggth5yzlvh_r80000gn/T/ipykernel_28488/4249240626.py:24: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  fig.show()
+</code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_8_1.png" /></p>
+<p>The posterior is found to concentrate most of its mass in two disjoint, banana-shaped regions. The density resembles two crescent moons facing each other, hence the name of the model.</p>
+<p>From the figure, it is clear that the effective support of the posterior is much smaller relative to the prior support <span class="arithmatex">\([0,1]^2\)</span>. Besides, from the fact that the two moons are separated by a (much larger) region of low posterior mass, we expect the performance of an MCMC to be very sensitive to the initialization strategy of the chains and the step size of the method.</p>
+<p>To gather reference samples from the posterior, we implement below a simple Metropolis-Hastings algorithm with the independent proposal distribution</p>
+<div class="arithmatex">\[ \boldsymbol{\theta}' | \boldsymbol{\theta} \sim 0.5\mathcal{N}(p_1, \sigma) + 0.5\mathcal{N}(p_2, \sigma),\]</div>
+<p>Where <span class="arithmatex">\(p_1 = (0.25, 0.25)\)</span> and <span class="arithmatex">\(p_2 = (-0.25, -0.25)\)</span> approximate the curvature center of the moons, and <span class="arithmatex">\(\sigma\)</span> is fixed.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">torch.distributions</span> <span class="kn">import</span> <span class="n">MultivariateNormal</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">def</span> <span class="nf">within_support</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.25</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">def</span> <span class="nf">sample_from_proposal</span><span class="p">(</span><span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="n">p</span> <span class="o">=</span> <span class="mf">0.25</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="n">p1</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="n">p2</span> <span class="o">=</span> <span class="o">-</span><span class="n">p</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">cov</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="n">dist_high</span> <span class="o">=</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">cov</span><span class="p">)</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="n">dist_low</span> <span class="o">=</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">cov</span><span class="p">)</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">u</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">))</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="n">high_samples</span> <span class="o">=</span> <span class="n">dist_high</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">))</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="n">low_samples</span> <span class="o">=</span> <span class="n">dist_low</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">))</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">u</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">high_samples</span><span class="p">,</span> <span class="n">low_samples</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="k">def</span> <span class="nf">logp_theta_of_x0</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>    <span class="n">r</span> <span class="o">=</span> <span class="n">r_of_theta_x</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">theta</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">x0</span><span class="p">)</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>    <span class="k">return</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="mf">0.01</span><span class="o">**</span><span class="mi">2</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="k">def</span> <span class="nf">naive_hastings</span><span class="p">(</span>
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>    <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">theta0</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="p">):</span>
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>    <span class="n">logu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">))</span>
+</span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>    <span class="n">chains</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>    <span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta0</span>
+</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>    <span class="n">proposal_samples</span> <span class="o">=</span> <span class="n">sample_from_proposal</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+</span><span id="__span-6-33"><a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>    <span class="n">logp_samples</span> <span class="o">=</span> <span class="n">logp_theta_of_x0</span><span class="p">(</span><span class="n">proposal_samples</span><span class="p">)</span>
+</span><span id="__span-6-34"><a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>    <span class="n">chains_within_support</span> <span class="o">=</span> <span class="n">within_support</span><span class="p">(</span><span class="n">proposal_samples</span><span class="p">)</span>
+</span><span id="__span-6-35"><a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>    <span class="n">current_logp</span> <span class="o">=</span> <span class="n">logp_theta_of_x0</span><span class="p">(</span><span class="n">theta0</span><span class="p">)</span>
+</span><span id="__span-6-36"><a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>    <span class="n">acceptance_prob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">))</span>
+</span><span id="__span-6-37"><a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">):</span>
+</span><span id="__span-6-38"><a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a>        <span class="n">old</span> <span class="o">=</span> <span class="n">chains</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+</span><span id="__span-6-39"><a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a>        <span class="n">target</span> <span class="o">=</span> <span class="n">proposal_samples</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+</span><span id="__span-6-40"><a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a>        <span class="n">log_alpha</span> <span class="o">=</span> <span class="n">logp_samples</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">current_logp</span>
+</span><span id="__span-6-41"><a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a>        <span class="n">condition</span> <span class="o">=</span> <span class="n">chains_within_support</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">log_alpha</span> <span class="o">&gt;</span> <span class="n">logu</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+</span><span id="__span-6-42"><a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a>        <span class="n">acceptance_prob</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">condition</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</span><span id="__span-6-43"><a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a>        <span class="n">current_logp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">logp_samples</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">current_logp</span><span class="p">)</span>
+</span><span id="__span-6-44"><a id="__codelineno-6-44" name="__codelineno-6-44" href="#__codelineno-6-44"></a>        <span class="n">chains</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">condition</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">target</span><span class="p">,</span> <span class="n">old</span><span class="p">)</span>
+</span><span id="__span-6-45"><a id="__codelineno-6-45" name="__codelineno-6-45" href="#__codelineno-6-45"></a>
+</span><span id="__span-6-46"><a id="__codelineno-6-46" name="__codelineno-6-46" href="#__codelineno-6-46"></a>    <span class="n">acceptance_prob</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-6-47"><a id="__codelineno-6-47" name="__codelineno-6-47" href="#__codelineno-6-47"></a>        <span class="n">acceptance_prob</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_samples</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+</span><span id="__span-6-48"><a id="__codelineno-6-48" name="__codelineno-6-48" href="#__codelineno-6-48"></a>    <span class="p">)</span>
+</span><span id="__span-6-49"><a id="__codelineno-6-49" name="__codelineno-6-49" href="#__codelineno-6-49"></a>
+</span><span id="__span-6-50"><a id="__codelineno-6-50" name="__codelineno-6-50" href="#__codelineno-6-50"></a>    <span class="c1"># Swap (sample, chain) by (chain, sample)</span>
+</span><span id="__span-6-51"><a id="__codelineno-6-51" name="__codelineno-6-51" href="#__codelineno-6-51"></a>    <span class="k">return</span> <span class="n">chains</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">acceptance_prob</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">num_samples</span> <span class="o">=</span> <span class="mi">100000</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">num_chains</span> <span class="o">=</span> <span class="mi">5</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="mf">1.51</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">theta0</span> <span class="o">=</span> <span class="n">sample_from_proposal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">samples_from_mcmc</span><span class="p">,</span> <span class="n">acceptance_prob</span> <span class="o">=</span> <span class="n">naive_hastings</span><span class="p">(</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">num_samples</span><span class="p">,</span> <span class="n">theta0</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">,</span> <span class="n">sigma</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Our implementation takes very few seconds to generate the samples. Let us plot some diagnostics for the chains.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acceptance_prob</span><span class="p">[</span><span class="mi">10</span><span class="p">:,</span> <span class="p">:])</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Number of steps&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Acceptance probability&quot;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>/var/folders/0p/lb2wpb5n0y7ggth5yzlvh_r80000gn/T/ipykernel_28488/2498186862.py:4: UserWarning: The figure layout has changed to tight
+  fig.tight_layout()
+/var/folders/0p/lb2wpb5n0y7ggth5yzlvh_r80000gn/T/ipykernel_28488/2498186862.py:5: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  fig.show()
+</code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_13_1.png" /></p>
+<p>A very low and virtually constant acceptance probability is not surprising, given the choice of an independent proposal distribution with limited overlap with the true posterior mass.</p>
+<p>In the cell below, we plot other diagnostic visualization tools built into <a href="https://python.arviz.org/en/stable/index.html"><code>arviz</code></a>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">theta_1$&quot;</span><span class="p">,</span> <span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">theta_2$&quot;</span><span class="p">]</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">warmup</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">thin</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">warmup</span><span class="p">::</span><span class="n">thin</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="n">warmup</span><span class="p">::</span><span class="n">thin</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">data_from_mcmc</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">samples_from_mcmc</span><span class="p">)</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_trace</span><span class="p">(</span><span class="n">data_from_mcmc</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">rug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;rank_vlines&quot;</span><span class="p">)</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_autocorr</span><span class="p">(</span><span class="n">data_from_mcmc</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">max_lag</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_ess</span><span class="p">(</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="n">data_from_mcmc</span><span class="p">,</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;evolution&quot;</span><span class="p">,</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    <span class="n">extra_methods</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>array([&lt;Axes: title={&#39;center&#39;: &#39;$\\theta_1$&#39;}, xlabel=&#39;Total number of draws&#39;, ylabel=&#39;Relative ESS&#39;&gt;,
+       &lt;Axes: title={&#39;center&#39;: &#39;$\\theta_2$&#39;}, xlabel=&#39;Total number of draws&#39;, ylabel=&#39;Relative ESS&#39;&gt;],
+      dtype=object)
+</code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_15_1.png" /></p>
+<p><img alt="png" src="../twomoons_files/twomoons_15_2.png" /></p>
+<p><img alt="png" src="../twomoons_files/twomoons_15_3.png" /></p>
+<p>Again, we observe a similar behaviour for the autocorrelation across the chains.</p>
+<p>Finally, we visualize our samples in a corner plot, discarding 1000 warmup steps.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">data_from_mcmc_trimmed</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">samples_from_mcmc</span><span class="p">,</span> <span class="n">warmup</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_pair</span><span class="p">(</span><span class="n">data_from_mcmc_trimmed</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">marginals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>array([[&lt;Axes: &gt;, None],
+       [&lt;Axes: xlabel=&#39;$\\theta_1$&#39;, ylabel=&#39;$\\theta_2$&#39;&gt;, &lt;Axes: &gt;]],
+      dtype=object)
+</code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_17_1.png" /></p>
+<p>Let us compare these results with samples from the true posterior, which obtain from explicitly inverting the simulator.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">true_samples</span> <span class="o">=</span> <span class="n">two_moons</span><span class="o">.</span><span class="n">get_posterior_samples</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">data_from_true_samples</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">true_samples</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_pair</span><span class="p">(</span><span class="n">data_from_true_samples</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">marginals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>array([[&lt;Axes: &gt;, None],
+       [&lt;Axes: xlabel=&#39;$\\theta_1$&#39;, ylabel=&#39;$\\theta_2$&#39;&gt;, &lt;Axes: &gt;]],
+      dtype=object)
+</code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_19_1.png" /></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span> <span class="nf">compare_marginals</span><span class="p">(</span><span class="n">target_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">data_label</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">az</span><span class="o">.</span><span class="n">plot_density</span><span class="p">(</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>        <span class="p">[</span><span class="n">target_data</span><span class="p">,</span> <span class="n">data_from_true_samples</span><span class="p">],</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>        <span class="n">data_labels</span><span class="o">=</span><span class="p">[</span><span class="n">data_label</span><span class="p">,</span> <span class="s2">&quot;Reference&quot;</span><span class="p">],</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>        <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>        <span class="n">shade</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="p">)</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="n">compare_marginals</span><span class="p">(</span><span class="n">data_from_mcmc_trimmed</span><span class="p">,</span> <span class="s2">&quot;MCMC&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_20_0.png" /></p>
+<h2 id="using_sbi">Using SBI<a class="headerlink" href="#using_sbi" title="Permanent link">&para;</a></h2>
+<p>We will use <code>SNPE</code> and <code>SRE</code> in this benchmark.</p>
+<h3 id="npe_and_snpe">NPE and SNPE<a class="headerlink" href="#npe_and_snpe" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">npe</span> <span class="o">=</span> <span class="n">SNPERunner</span><span class="p">(</span><span class="n">benchmark</span><span class="o">=</span><span class="n">two_moons</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">density_estimator</span><span class="o">=</span><span class="s2">&quot;nsf&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">num_simulations</span> <span class="o">=</span> <span class="mi">16384</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">num_samples</span> <span class="o">=</span> <span class="mi">16384</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">x0</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">training_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="s2">&quot;show_train_summary&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="s2">&quot;training_batch_size&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="s2">&quot;use_combined_loss&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mf">2e-4</span><span class="p">,</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">}</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="n">truncate_at</span> <span class="o">=</span> <span class="mf">1e-4</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="o">%%</span><span class="n">time</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">npe</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">num_simulations</span><span class="p">,</span> <span class="n">x_0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">training_kwargs</span><span class="o">=</span><span class="n">training_kwargs</span><span class="p">,</span> <span class="n">truncate_at</span><span class="o">=</span><span class="n">truncate_at</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>Running 16384 simulations.:   0%|          | 0/16384 [00:00&lt;?, ?it/s]
+
+
+ Neural network successfully converged after 169 epochs.
+        -------------------------
+        ||||| ROUND 1 STATS |||||:
+        -------------------------
+        Epochs trained: 169
+        Best validation performance: 3.5672
+        -------------------------
+
+
+
+
+Drawing 1000000 posterior samples:   0%|          | 0/1000000 [00:00&lt;?, ?it/s]
+
+
+/Users/bernardoveronese/miniconda3/envs/sbibench/lib/python3.10/site-packages/nflows/transforms/lu.py:80: UserWarning: torch.triangular_solve is deprecated in favor of torch.linalg.solve_triangularand will be removed in a future PyTorch release.
+torch.linalg.solve_triangular has its arguments reversed and does not return a copy of one of the inputs.
+X = torch.triangular_solve(B, A).solution
+should be replaced with
+X = torch.linalg.solve_triangular(A, B). (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/native/BatchLinearAlgebra.cpp:2198.)
+  outputs, _ = torch.triangular_solve(
+
+
+CPU times: user 23min 28s, sys: 35.1 s, total: 24min 3s
+Wall time: 12min 27s
+
+
+
+
+
+(DirectPosterior sampler for potential_fn=&lt;PosteriorBasedPotential&gt;,
+ NFlowsFlow(
+   (net): Flow(
+     (_transform): CompositeTransform(
+       (_transforms): ModuleList(
+         (0): AffineTransform()
+         (1): PiecewiseRationalQuadraticCouplingTransform(
+           (transform_net): ResidualNet(
+             (initial_layer): Linear(in_features=3, out_features=50, bias=True)
+             (blocks): ModuleList(
+               (0-1): 2 x ResidualBlock(
+                 (context_layer): Linear(in_features=2, out_features=50, bias=True)
+                 (linear_layers): ModuleList(
+                   (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+                 )
+                 (dropout): Dropout(p=0.0, inplace=False)
+               )
+             )
+             (final_layer): Linear(in_features=50, out_features=29, bias=True)
+           )
+         )
+         (2): LULinear()
+         (3): PiecewiseRationalQuadraticCouplingTransform(
+           (transform_net): ResidualNet(
+             (initial_layer): Linear(in_features=3, out_features=50, bias=True)
+             (blocks): ModuleList(
+               (0-1): 2 x ResidualBlock(
+                 (context_layer): Linear(in_features=2, out_features=50, bias=True)
+                 (linear_layers): ModuleList(
+                   (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+                 )
+                 (dropout): Dropout(p=0.0, inplace=False)
+               )
+             )
+             (final_layer): Linear(in_features=50, out_features=29, bias=True)
+           )
+         )
+         (4): LULinear()
+         (5): PiecewiseRationalQuadraticCouplingTransform(
+           (transform_net): ResidualNet(
+             (initial_layer): Linear(in_features=3, out_features=50, bias=True)
+             (blocks): ModuleList(
+               (0-1): 2 x ResidualBlock(
+                 (context_layer): Linear(in_features=2, out_features=50, bias=True)
+                 (linear_layers): ModuleList(
+                   (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+                 )
+                 (dropout): Dropout(p=0.0, inplace=False)
+               )
+             )
+             (final_layer): Linear(in_features=50, out_features=29, bias=True)
+           )
+         )
+         (6): LULinear()
+         (7): PiecewiseRationalQuadraticCouplingTransform(
+           (transform_net): ResidualNet(
+             (initial_layer): Linear(in_features=3, out_features=50, bias=True)
+             (blocks): ModuleList(
+               (0-1): 2 x ResidualBlock(
+                 (context_layer): Linear(in_features=2, out_features=50, bias=True)
+                 (linear_layers): ModuleList(
+                   (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+                 )
+                 (dropout): Dropout(p=0.0, inplace=False)
+               )
+             )
+             (final_layer): Linear(in_features=50, out_features=29, bias=True)
+           )
+         )
+         (8): LULinear()
+         (9): PiecewiseRationalQuadraticCouplingTransform(
+           (transform_net): ResidualNet(
+             (initial_layer): Linear(in_features=3, out_features=50, bias=True)
+             (blocks): ModuleList(
+               (0-1): 2 x ResidualBlock(
+                 (context_layer): Linear(in_features=2, out_features=50, bias=True)
+                 (linear_layers): ModuleList(
+                   (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+                 )
+                 (dropout): Dropout(p=0.0, inplace=False)
+               )
+             )
+             (final_layer): Linear(in_features=50, out_features=29, bias=True)
+           )
+         )
+         (10): LULinear()
+       )
+     )
+     (_distribution): StandardNormal()
+     (_embedding_net): Sequential(
+       (0): Standardize()
+       (1): Identity()
+     )
+   )
+ ))
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">samples_from_npe</span> <span class="o">=</span> <span class="n">npe</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x0</span><span class="p">)</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">data_from_npe</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">samples_from_npe</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_pair</span><span class="p">(</span><span class="n">data_from_npe</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">marginals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>Drawing 16384 posterior samples:   0%|          | 0/16384 [00:00&lt;?, ?it/s]
+
+
+
+
+
+array([[&lt;Axes: &gt;, None],
+       [&lt;Axes: xlabel=&#39;$\\theta_1$&#39;, ylabel=&#39;$\\theta_2$&#39;&gt;, &lt;Axes: &gt;]],
+      dtype=object)
+</code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_26_2.png" /></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">compare_marginals</span><span class="p">(</span><span class="n">data_from_npe</span><span class="p">,</span> <span class="s2">&quot;NPE&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_27_0.png" /></p>
+<p>The results seem to be...not good. Let us try the sequential version, SNPE:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">snpe</span> <span class="o">=</span> <span class="n">SNPERunner</span><span class="p">(</span><span class="n">benchmark</span><span class="o">=</span><span class="n">two_moons</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">density_estimator</span><span class="o">=</span><span class="s2">&quot;nsf&quot;</span><span class="p">)</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">num_rounds</span> <span class="o">=</span> <span class="mi">4</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="o">%%</span><span class="n">time</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">snpe</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">num_simulations</span><span class="p">,</span> <span class="n">num_rounds</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">x_0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">training_kwargs</span><span class="o">=</span><span class="n">training_kwargs</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>Running 5461 simulations.:   0%|          | 0/5461 [00:00&lt;?, ?it/s]
+
+
+ Neural network successfully converged after 150 epochs.
+        -------------------------
+        ||||| ROUND 1 STATS |||||:
+        -------------------------
+        Epochs trained: 150
+        Best validation performance: 3.3922
+        -------------------------
+
+
+
+
+Drawing 5461 posterior samples:   0%|          | 0/5461 [00:00&lt;?, ?it/s]
+
+
+
+Running 5461 simulations.:   0%|          | 0/5461 [00:00&lt;?, ?it/s]
+
+
+Using SNPE-C with atomic loss
+ Neural network successfully converged after 78 epochs.
+        -------------------------
+        ||||| ROUND 2 STATS |||||:
+        -------------------------
+        Epochs trained: 78
+        Best validation performance: 1.4137
+        -------------------------
+
+
+
+
+Drawing 5461 posterior samples:   0%|          | 0/5461 [00:00&lt;?, ?it/s]
+
+
+
+Running 5461 simulations.:   0%|          | 0/5461 [00:00&lt;?, ?it/s]
+
+
+Using SNPE-C with atomic loss
+ Neural network successfully converged after 23 epochs.
+        -------------------------
+        ||||| ROUND 3 STATS |||||:
+        -------------------------
+        Epochs trained: 23
+        Best validation performance: 0.6832
+        -------------------------
+
+CPU times: user 32min 30s, sys: 1min 57s, total: 34min 28s
+Wall time: 17min 39s
+
+
+
+
+
+(DirectPosterior sampler for potential_fn=&lt;PosteriorBasedPotential&gt;,
+ NFlowsFlow(
+   (net): Flow(
+     (_transform): CompositeTransform(
+       (_transforms): ModuleList(
+         (0): AffineTransform()
+         (1): PiecewiseRationalQuadraticCouplingTransform(
+           (transform_net): ResidualNet(
+             (initial_layer): Linear(in_features=3, out_features=50, bias=True)
+             (blocks): ModuleList(
+               (0-1): 2 x ResidualBlock(
+                 (context_layer): Linear(in_features=2, out_features=50, bias=True)
+                 (linear_layers): ModuleList(
+                   (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+                 )
+                 (dropout): Dropout(p=0.0, inplace=False)
+               )
+             )
+             (final_layer): Linear(in_features=50, out_features=29, bias=True)
+           )
+         )
+         (2): LULinear()
+         (3): PiecewiseRationalQuadraticCouplingTransform(
+           (transform_net): ResidualNet(
+             (initial_layer): Linear(in_features=3, out_features=50, bias=True)
+             (blocks): ModuleList(
+               (0-1): 2 x ResidualBlock(
+                 (context_layer): Linear(in_features=2, out_features=50, bias=True)
+                 (linear_layers): ModuleList(
+                   (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+                 )
+                 (dropout): Dropout(p=0.0, inplace=False)
+               )
+             )
+             (final_layer): Linear(in_features=50, out_features=29, bias=True)
+           )
+         )
+         (4): LULinear()
+         (5): PiecewiseRationalQuadraticCouplingTransform(
+           (transform_net): ResidualNet(
+             (initial_layer): Linear(in_features=3, out_features=50, bias=True)
+             (blocks): ModuleList(
+               (0-1): 2 x ResidualBlock(
+                 (context_layer): Linear(in_features=2, out_features=50, bias=True)
+                 (linear_layers): ModuleList(
+                   (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+                 )
+                 (dropout): Dropout(p=0.0, inplace=False)
+               )
+             )
+             (final_layer): Linear(in_features=50, out_features=29, bias=True)
+           )
+         )
+         (6): LULinear()
+         (7): PiecewiseRationalQuadraticCouplingTransform(
+           (transform_net): ResidualNet(
+             (initial_layer): Linear(in_features=3, out_features=50, bias=True)
+             (blocks): ModuleList(
+               (0-1): 2 x ResidualBlock(
+                 (context_layer): Linear(in_features=2, out_features=50, bias=True)
+                 (linear_layers): ModuleList(
+                   (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+                 )
+                 (dropout): Dropout(p=0.0, inplace=False)
+               )
+             )
+             (final_layer): Linear(in_features=50, out_features=29, bias=True)
+           )
+         )
+         (8): LULinear()
+         (9): PiecewiseRationalQuadraticCouplingTransform(
+           (transform_net): ResidualNet(
+             (initial_layer): Linear(in_features=3, out_features=50, bias=True)
+             (blocks): ModuleList(
+               (0-1): 2 x ResidualBlock(
+                 (context_layer): Linear(in_features=2, out_features=50, bias=True)
+                 (linear_layers): ModuleList(
+                   (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+                 )
+                 (dropout): Dropout(p=0.0, inplace=False)
+               )
+             )
+             (final_layer): Linear(in_features=50, out_features=29, bias=True)
+           )
+         )
+         (10): LULinear()
+       )
+     )
+     (_distribution): StandardNormal()
+     (_embedding_net): Sequential(
+       (0): Standardize()
+       (1): Identity()
+     )
+   )
+ ))
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">samples_from_snpe</span> <span class="o">=</span> <span class="n">snpe</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x0</span><span class="p">)</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">data_from_snpe</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">samples_from_snpe</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_pair</span><span class="p">(</span><span class="n">data_from_snpe</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">marginals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>Drawing 16384 posterior samples:   0%|          | 0/16384 [00:00&lt;?, ?it/s]
+
+
+
+
+
+array([[&lt;Axes: &gt;, None],
+       [&lt;Axes: xlabel=&#39;$\\theta_1$&#39;, ylabel=&#39;$\\theta_2$&#39;&gt;, &lt;Axes: &gt;]],
+      dtype=object)
+</code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_31_2.png" /></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">compare_marginals</span><span class="p">(</span><span class="n">data_from_snpe</span><span class="p">,</span> <span class="s2">&quot;SNPE&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_32_0.png" /></p>
+<h3 id="nre_and_snre">NRE and SNRE<a class="headerlink" href="#nre_and_snre" title="Permanent link">&para;</a></h3>
+<p>We first train 1 round of NRE, and generate samples using MCMC. Since the two posterior modes are far away from each other, we use multiple chains to avoid covering only one mode.</p>
+<p>We also experiment with different training hyperparameters.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">nre</span> <span class="o">=</span> <span class="n">SNRERunner</span><span class="p">(</span><span class="n">benchmark</span><span class="o">=</span><span class="n">two_moons</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">mcmc_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>    <span class="s2">&quot;mcmc_method&quot;</span><span class="p">:</span> <span class="s2">&quot;slice_np_vectorized&quot;</span><span class="p">,</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>    <span class="s2">&quot;mcmc_parameters&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;num_chains&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">},</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="p">}</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="n">training_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>    <span class="s2">&quot;show_train_summary&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>    <span class="s2">&quot;training_batch_size&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>    <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mf">2e-4</span><span class="p">,</span>
+</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="o">%%</span><span class="n">time</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="n">nre</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>    <span class="n">num_simulations</span><span class="p">,</span> <span class="n">training_kwargs</span><span class="o">=</span><span class="n">training_kwargs</span><span class="p">,</span> <span class="n">posterior_kwargs</span><span class="o">=</span><span class="n">mcmc_kwargs</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>Running 16384 simulations.:   0%|          | 0/16384 [00:00&lt;?, ?it/s]
+
+
+ Neural network successfully converged after 98 epochs.
+        -------------------------
+        ||||| ROUND 1 STATS |||||:
+        -------------------------
+        Epochs trained: 98
+        Best validation performance: -0.0006
+        -------------------------
+
+CPU times: user 5min 16s, sys: 3.36 s, total: 5min 19s
+Wall time: 2min 46s
+
+
+/Users/bernardoveronese/miniconda3/envs/sbibench/lib/python3.10/site-packages/sbi/inference/posteriors/mcmc_posterior.py:114: UserWarning: The default value for thinning in MCMC sampling has been changed from 10 to 1. This might cause the results differ from the last benchmark.
+  thin = _process_thin_default(thin)
+
+
+
+
+
+(MCMCPosterior sampler for potential_fn=&lt;RatioBasedPotential&gt;,
+ Sequential(
+   (0): StandardizeInputs(
+     (embedding_net_x): Sequential(
+       (0): Standardize()
+       (1): Identity()
+     )
+     (embedding_net_y): Sequential(
+       (0): Standardize()
+       (1): Identity()
+     )
+   )
+   (1): ResidualNet(
+     (initial_layer): Linear(in_features=4, out_features=50, bias=True)
+     (blocks): ModuleList(
+       (0-1): 2 x ResidualBlock(
+         (linear_layers): ModuleList(
+           (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+         )
+         (dropout): Dropout(p=0.0, inplace=False)
+       )
+     )
+     (final_layer): Linear(in_features=50, out_features=1, bias=True)
+   )
+ ))
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">samples_from_nre</span> <span class="o">=</span> <span class="n">nre</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x0</span><span class="p">)</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="n">data_from_nre</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">samples_from_nre</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_pair</span><span class="p">(</span><span class="n">data_from_nre</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">marginals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>Running vectorized MCMC with 50 chains:   0%|          | 0/26400 [00:00&lt;?, ?it/s]
+
+
+
+
+
+array([[&lt;Axes: &gt;, None],
+       [&lt;Axes: xlabel=&#39;$\\theta_1$&#39;, ylabel=&#39;$\\theta_2$&#39;&gt;, &lt;Axes: &gt;]],
+      dtype=object)
+</code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_36_2.png" /></p>
+<p>NRE seems to do a much better job than NPE in this benchmark for this configuration of hyperparameters.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="n">compare_marginals</span><span class="p">(</span><span class="n">data_from_nre</span><span class="p">,</span> <span class="s2">&quot;NRE&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_38_0.png" /></p>
+<p>Let us try the sequential variant next. We decide on a number of rounds and split the simulation budget equally between them.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="n">snre</span> <span class="o">=</span> <span class="n">SNRERunner</span><span class="p">(</span><span class="n">benchmark</span><span class="o">=</span><span class="n">two_moons</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="n">num_rounds</span> <span class="o">=</span> <span class="mi">4</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="o">%%</span><span class="n">time</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="n">snre</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>    <span class="n">num_simulations</span><span class="p">,</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>    <span class="n">num_rounds</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>    <span class="n">x_0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>    <span class="n">training_kwargs</span><span class="o">=</span><span class="n">training_kwargs</span><span class="p">,</span>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>    <span class="n">posterior_kwargs</span><span class="o">=</span><span class="n">mcmc_kwargs</span><span class="p">,</span>
+</span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>Running 4096 simulations.:   0%|          | 0/4096 [00:00&lt;?, ?it/s]
+
+
+ Neural network successfully converged after 77 epochs.
+        -------------------------
+        ||||| ROUND 1 STATS |||||:
+        -------------------------
+        Epochs trained: 77
+        Best validation performance: -0.0005
+        -------------------------
+
+
+
+
+Running vectorized MCMC with 50 chains:   0%|          | 0/14100 [00:00&lt;?, ?it/s]
+
+
+
+Running 4096 simulations.:   0%|          | 0/4096 [00:00&lt;?, ?it/s]
+
+
+ Neural network successfully converged after 76 epochs.
+        -------------------------
+        ||||| ROUND 1 STATS |||||:
+        -------------------------
+        Epochs trained: 76
+        Best validation performance: -0.0030
+        -------------------------
+
+
+
+
+Running vectorized MCMC with 50 chains:   0%|          | 0/14100 [00:00&lt;?, ?it/s]
+
+
+
+Running 4096 simulations.:   0%|          | 0/4096 [00:00&lt;?, ?it/s]
+
+
+ Neural network successfully converged after 59 epochs.
+        -------------------------
+        ||||| ROUND 1 STATS |||||:
+        -------------------------
+        Epochs trained: 59
+        Best validation performance: -0.0045
+        -------------------------
+
+
+
+
+Running vectorized MCMC with 50 chains:   0%|          | 0/14100 [00:00&lt;?, ?it/s]
+
+
+
+Running 4096 simulations.:   0%|          | 0/4096 [00:00&lt;?, ?it/s]
+
+
+ Neural network successfully converged after 30 epochs.
+        -------------------------
+        ||||| ROUND 1 STATS |||||:
+        -------------------------
+        Epochs trained: 30
+        Best validation performance: -0.0052
+        -------------------------
+
+CPU times: user 6min 39s, sys: 5.12 s, total: 6min 44s
+Wall time: 3min 30s
+
+
+
+
+
+(MCMCPosterior sampler for potential_fn=&lt;RatioBasedPotential&gt;,
+ Sequential(
+   (0): StandardizeInputs(
+     (embedding_net_x): Sequential(
+       (0): Standardize()
+       (1): Identity()
+     )
+     (embedding_net_y): Sequential(
+       (0): Standardize()
+       (1): Identity()
+     )
+   )
+   (1): ResidualNet(
+     (initial_layer): Linear(in_features=4, out_features=50, bias=True)
+     (blocks): ModuleList(
+       (0-1): 2 x ResidualBlock(
+         (linear_layers): ModuleList(
+           (0-1): 2 x Linear(in_features=50, out_features=50, bias=True)
+         )
+         (dropout): Dropout(p=0.0, inplace=False)
+       )
+     )
+     (final_layer): Linear(in_features=50, out_features=1, bias=True)
+   )
+ ))
+</code></pre></div>
+<p>We see that the total training times are similar in order of magnitude; the sequential version trains for more rounds but with less data per round.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="n">samples_from_snre</span> <span class="o">=</span> <span class="n">snre</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x0</span><span class="p">)</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="n">data_from_snre</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">samples_from_snre</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="n">az</span><span class="o">.</span><span class="n">plot_pair</span><span class="p">(</span><span class="n">data_from_snre</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">marginals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>Running vectorized MCMC with 50 chains:   0%|          | 0/26400 [00:00&lt;?, ?it/s]
+
+
+
+
+
+array([[&lt;Axes: &gt;, None],
+       [&lt;Axes: xlabel=&#39;$\\theta_1$&#39;, ylabel=&#39;$\\theta_2$&#39;&gt;, &lt;Axes: &gt;]],
+      dtype=object)
+</code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_43_2.png" /></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="n">compare_marginals</span><span class="p">(</span><span class="n">data_from_snre</span><span class="p">,</span> <span class="s2">&quot;SNRE&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="png" src="../twomoons_files/twomoons_44_0.png" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+        <script src="../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,14 +1,14 @@
 import pyro
 
-from ..toymodel import ToyModel
+from ..benchmark import Benchmark
 from ..samplers import PyroMCMCPosterior
 
-from .benchmark import Benchmark
+from .runner import Runner
 
 
-class MCMCBenchmark(Benchmark):
+class MCMCRunner(Runner):
     def __init__(
-        self, toy_model: ToyModel, seed: int, method: str = "NUTS", **kwargs
+        self, toy_model: Benchmark, seed: int, method: str = "NUTS", **kwargs
     ) -> None:
         pyro.set_rng_seed(seed)
         super().__init__(toy_model, seed)

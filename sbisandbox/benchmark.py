@@ -11,7 +11,9 @@ from .utils import validate_model
 from .types import Shape
 
 
-class ToyModel(ABC):
+class Benchmark(ABC):
+    """Base class for benchmark tasks."""
+
     def __init__(self, theta_event_shape: Shape, x_event_shape: Shape) -> None:
         self.theta_event_shape = theta_event_shape
         self.x_event_shape = x_event_shape

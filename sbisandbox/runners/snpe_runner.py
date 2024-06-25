@@ -2,20 +2,27 @@ from typing import Optional
 
 from torch import Tensor
 from sbi.inference import SNPE
+from sbi.inference.potentials import posterior_estimator_based_potential
+from sbi.inference.posteriors import ImportanceSamplingPosterior
 from sbi.utils import RestrictedPrior, get_density_thresholder
 
-from ..toymodel import ToyModel
-from .neural_benchmark import NeuralBenchmark
+from ..benchmark import Benchmark
+from .neural_runner import NeuralRunner
 
 
-class SNPEBenchmark(NeuralBenchmark):
-    inference_cls = SNPE
-    inference_algorithm = "SNPE"
-
+class SNPERunner(NeuralRunner):
     def __init__(
-        self, toy_model: ToyModel, seed: int, density_estimator: str = "nsf"
+        self, benchmark: Benchmark, seed: int, density_estimator: str = "nsf"
     ) -> None:
-        super().__init__(toy_model, seed, density_estimator=density_estimator)
+        super().__init__(benchmark, seed, density_estimator=density_estimator)
+
+    @property
+    def inference_cls(self):
+        return SNPE
+
+    @property
+    def inference_algorithm(self):
+        return "SNPE"
 
     def _train_round(
         self,
@@ -25,6 +32,7 @@ class SNPEBenchmark(NeuralBenchmark):
         posterior_kwargs: Optional[dict] = None,
         training_kwargs: Optional[dict] = None,
         truncate_at: Optional[float] = None,
+        **kwargs,
     ):
         truncate_proposals = truncate_at is not None
         _training_kwargs = training_kwargs or {}
@@ -46,4 +54,13 @@ class SNPEBenchmark(NeuralBenchmark):
             )
         else:
             proposal = posterior
-        return proposal, density_estimator
+        return proposal, posterior, density_estimator
+
+    def get_importance_posterior(self, x_0: Tensor):
+        assert (
+            self.density_estimator is not None
+        ), ".train method should be called first"
+        potential_fn, transform = posterior_estimator_based_potential(
+            self.density_estimator, self.prior, x_0
+        )
+        return ImportanceSamplingPosterior(potential_fn, self.prior, transform)

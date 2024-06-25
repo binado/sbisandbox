@@ -1,23 +1,25 @@
 from typing import Optional
-import logging
 
 from torch import Tensor
-from sbi.inference import SNRE
+from sbi.inference import SNLE
 
-from ..toymodel import ToyModel
-from .neural_benchmark import NeuralBenchmark
-
-logger = logging.getLogger(__name__)
+from ..benchmark import Benchmark
+from .neural_runner import NeuralRunner
 
 
-class SNREBenchmark(NeuralBenchmark):
-    inference_cls = SNRE
-    inference_algorithm = "SNRE"
-
+class SNLERunner(NeuralRunner):
     def __init__(
-        self, toy_model: ToyModel, seed: int, classifier: str = "resnet"
+        self, benchmark: Benchmark, seed: int, density_estimator: str = "nsf"
     ) -> None:
-        super().__init__(toy_model, seed, classifier=classifier)
+        super().__init__(benchmark, seed, density_estimator=density_estimator)
+
+    @property
+    def inference_cls(self):
+        return SNLE
+
+    @property
+    def inference_algorithm(self):
+        return "SNLE"
 
     def _train_round(
         self,
@@ -26,6 +28,7 @@ class SNREBenchmark(NeuralBenchmark):
         x_0: Optional[Tensor] = None,
         posterior_kwargs: Optional[dict] = None,
         training_kwargs: Optional[dict] = None,
+        **kwargs,
     ):
         _training_kwargs = training_kwargs or {}
         _posterior_kwargs = posterior_kwargs or {}
@@ -37,4 +40,4 @@ class SNREBenchmark(NeuralBenchmark):
             density_estimator=density_estimator, **_posterior_kwargs
         )
         new_proposal = posterior.set_default_x(x_0) if x_0 is not None else posterior
-        return new_proposal, density_estimator
+        return new_proposal, posterior, density_estimator

@@ -5,10 +5,27 @@ import pyro
 import pyro.distributions as dist
 
 from ..types import Shape
-from ..toymodel import ToyModel, UniformPriorMixin
+from ..benchmark import Benchmark, UniformPriorMixin
 
 
-class GaussianLinearUniformToyModel(UniformPriorMixin, ToyModel):
+class GaussianLinearUniformBenchmark(UniformPriorMixin, Benchmark):
+    r"""Gaussian linear benchmark task.
+
+    The parameters $\boldsymbol{\theta} \in \mathbb{R}^n$ are sampled independently from a uniform distribution,
+
+    $$ \theta_i \sim \mathcal{U}([-1, 1]),$$
+
+    for $i \in \{1, \ldots, n\}$. The data $\boldsymbol{x} \in \mathbb{R}^n$ are generated as follows:
+
+    $$ \boldsymbol{x} \sim \mathcal{N}(\mu=\boldsymbol{\theta}, \Sigma_2=\sigma \boldsymbol{I}_n) $$
+
+    The posterior is analytical and equal to the likelihood, i.e
+
+    $$
+    \log p(\boldsymbol{\theta} | \boldsymbol{x}) \propto -\frac{1}{2\sigma^2}(\boldsymbol{x} - \boldsymbol{\theta})^T(\boldsymbol{x} - \boldsymbol{\theta})
+    $$
+    """
+
     def __init__(self, n: int = 10, cov: float = 0.1):
         super().__init__(theta_event_shape=(n,), x_event_shape=(n,))
         self.prior_loc = torch.zeros(n)

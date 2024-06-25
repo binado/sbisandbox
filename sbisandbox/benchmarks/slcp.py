@@ -3,10 +3,36 @@ from torch import Tensor
 import pyro
 import pyro.distributions as dist
 
-from ..toymodel import ToyModel, UniformPriorMixin
+from ..benchmark import Benchmark, UniformPriorMixin
 
 
-class SLCPToyModel(UniformPriorMixin, ToyModel):
+class SLCPBenchmark(UniformPriorMixin, Benchmark):
+    r"""SLCP benchmark task.
+
+    The parameters $\boldsymbol{\theta} \in \mathbb{R}^5$ are sampled independently from a uniform distribution,
+
+    $$ \theta_i \sim \mathcal{U}([-3, 3]),$$
+
+    for $i \in \{1, \ldots, 5\}$.
+
+    The data $\boldsymbol{x} \in \mathbb{R}^8$ are generated as follows:
+
+    $$ (\boldsymbol{x}_1, \boldsymbol{x}_2, \boldsymbol{x}_3, \boldsymbol{x}_4) \sim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma}),$$
+
+    where
+
+    $$ \boldsymbol{\mu} = \begin{pmatrix} \theta_1 \\ \theta_2 \end{pmatrix}$$
+
+    and
+
+    $$ \boldsymbol{\Sigma} =
+    \begin{pmatrix}
+        \theta_3^4 &  \theta_3^2 \theta_4^2 \tanh \theta_5 \\
+         \theta_3^2 \theta_4^2 \tanh \theta_5  & \theta_4^4 \\
+    \end{pmatrix}.
+    $$
+    """
+
     def __init__(self, eps=1e-5) -> None:
         super().__init__(theta_event_shape=(5,), x_event_shape=(4, 2))
         self.event_batch_size = self.x_event_shape[0]

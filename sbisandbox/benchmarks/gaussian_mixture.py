@@ -4,10 +4,25 @@ import pyro
 import pyro.distributions as dist
 
 from ..types import Shape
-from ..toymodel import ToyModel, UniformPriorMixin
+from ..benchmark import Benchmark, UniformPriorMixin
 
 
-class GaussianMixtureToyModel(UniformPriorMixin, ToyModel):
+class GaussianMixtureBenchmark(UniformPriorMixin, Benchmark):
+    r"""Gaussian mixture benchmark task.
+
+    The parameters $\boldsymbol{\theta} \in \mathbb{R}^n$ are sampled independently from a uniform distribution,
+
+    $$ \theta_i \sim \mathcal{U}([-1, 1]),$$
+
+    for $i \in \{1, \ldots, n\}$.
+
+    The data $\boldsymbol{x} \in \mathbb{R}^n$ are generated as follows:
+
+    $$ \boldsymbol{x} \sim 0.5 \mathcal{N}(\mu=\boldsymbol{\theta}, \sigma_1 \boldsymbol{I}_n) + 0.5 \mathcal{N}(\mu=\boldsymbol{\theta}, \sigma_2 \boldsymbol{I}_n),$$
+
+    where $\sigma_1 \gg \sigma_2 > 0$.
+    """
+
     def __init__(self, n: int = 2, cov_high: float = 1.0, cov_low: float = 0.01):
         super().__init__(theta_event_shape=(n,), x_event_shape=(n,))
         self.prior_loc = torch.zeros(n)

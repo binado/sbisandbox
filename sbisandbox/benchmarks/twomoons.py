@@ -7,10 +7,38 @@ from torch.distributions import Normal
 import swyft
 
 from ..types import Shape
-from ..toymodel import ToyModel, UniformPriorMixin
+from ..benchmark import Benchmark, UniformPriorMixin
 
 
-class TwoMoonsToyModel(UniformPriorMixin, ToyModel):
+class TwoMoonsBenchmark(UniformPriorMixin, Benchmark):
+    r"""Two moons benchmark task.
+
+    The parameters $\boldsymbol{\theta} \in \mathbb{R}^2$ are sampled from
+
+    $$ \theta_1 \sim \mathcal{U}([-1, 1])$$
+
+    $$ \theta_2 \sim \mathcal{U}([-1, 1])$$
+
+    The data $\boldsymbol{x} \in \mathbb{R}^2$ are generated as follows:
+
+    - Sample the latent variables
+
+    $$\alpha \sim \mathcal{U}([-\pi/2, \pi/2])$$
+
+    $$r \sim \mathcal{N}(\mu=0.1, \sigma=0.01)$$
+
+    - Define
+
+    $$p = (r \cos \alpha + 0.25, r \sin \alpha)$$
+
+    - Output
+
+    $$\boldsymbol{x} = p - \left(\frac{|\theta_1 + \theta_2|}{\sqrt{2}}, \frac{\theta_1 - \theta_2}{\sqrt{2}} \right)$$
+
+    The name of the model comes from the shape of the posterior distribution $p(\boldsymbol{\theta} | \boldsymbol{x})$: bimodal with a banana-shaped mass around the modes (a-la a crescent moon).
+
+    """
+
     def __init__(self):
         super().__init__(theta_event_shape=(2,), x_event_shape=(2,))
         self.r_dist = Normal(0.1, 0.01)
@@ -95,7 +123,7 @@ class TwoMoonsToyModel(UniformPriorMixin, ToyModel):
 class TwoMoonsSwyftSimulator(swyft.Simulator):
     def __init__(self):
         super().__init__()
-        self._simulator = TwoMoonsToyModel()
+        self._simulator = TwoMoonsBenchmark()
 
     def get_params(self):
         return self._simulator.prior.sample()

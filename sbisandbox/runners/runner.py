@@ -5,24 +5,20 @@ from typing import Sequence
 from torch import Tensor
 from sbi.inference import simulate_for_sbi
 
-from ..toymodel import ToyModel
+from ..benchmark import Benchmark
 from ..utils import validate_model
 
 
-class Benchmark(ABC):
-    def __init__(self, toy_model: ToyModel, seed: int) -> None:
-        self.toy_model = toy_model
+class Runner(ABC):
+    def __init__(self, benchmark: Benchmark, seed: int) -> None:
+        self.benchmark = benchmark
         self.prior, self.simulator = validate_model(
-            toy_model.prior, toy_model.simulator
+            benchmark.prior, benchmark.simulator
         )
         self.seed = seed
         self.posterior = None
         self._sampling_time = None
         self._sampling_terminated = False
-
-    @property
-    def x0(self):
-        return self.toy_model.x0
 
     @property
     def sampling_time(self):

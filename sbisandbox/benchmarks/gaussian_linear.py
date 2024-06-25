@@ -4,10 +4,23 @@ import pyro
 import pyro.distributions as dist
 
 from ..types import Shape
-from ..toymodel import ToyModel
+from ..benchmark import Benchmark
 
 
-class GaussianLinearToyModel(ToyModel):
+class GaussianLinearBenchmark(Benchmark):
+    r"""Gaussian linear benchmark task.
+
+    The parameters $\boldsymbol{\theta} \in \mathbb{R}^n$ are sampled from
+
+    $$ \boldsymbol{\theta} \sim \mathcal{N}(\mu=\boldsymbol{0}_n, \Sigma_1=\sigma \boldsymbol{I}_n),$$
+
+    where $\sigma > 0$, $\boldsymbol{I}_n$ is the n x n identity matrix and $\boldsymbol{0}_n = \begin{pmatrix} 0 & \ldots & 0 \end{pmatrix}^T \in \mathbb{R}^n$.
+
+    The data $\boldsymbol{x} \in \mathbb{R}^n$ are generated as follows:
+
+    $$ \boldsymbol{x} \sim \mathcal{N}(\mu=\boldsymbol{\theta}, \Sigma_2=\sigma \boldsymbol{I}_n) $$
+    """
+
     def __init__(self, n: int = 10, cov: float = 0.1):
         super().__init__(theta_event_shape=(n,), x_event_shape=(n,))
         self.prior_loc = torch.zeros(n)

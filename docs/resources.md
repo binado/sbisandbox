@@ -13,9 +13,12 @@ For more complete lists of related papers and sofware, check out
 
 - [:simple-github: sbi](https://github.com/sbi-dev/sbi): A user-friendly Python package implementing the most common SBI algorithms.
 - [:simple-github: sbibm](https://github.com/sbi-benchmark/sbibm): A Simulation-Based Inference Benchmark comparing SBI algorithms' performances accross different tasks and metrics.
+- [:simple-github: swyft](https://github.com/undark-lab/swyft): the official Python implementation of the Truncated Marginal Neural Ratio Estimation (TMNRE) algorithm
 
 ## References
 
 [1]: Tejero-Cantero, Alvaro, et al. "SBI--A toolkit for simulation-based inference." arXiv preprint arXiv:2007.09114 (2020).
 
 [2]: Lueckmann, Jan-Matthis, et al. "Benchmarking simulation-based inference." International conference on artificial intelligence and statistics. PMLR, 2021.
+
+[3]: Miller, Benjamin Kurt, et al. "swyft: Truncated marginal neural ratio estimation in python." Journal of Open Source Software 7.75 (2022): 4205.

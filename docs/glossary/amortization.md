@@ -2,7 +2,7 @@
 
 ## Amortization
 
-One advantage of neural SBI algorithms is that the neural network is an *amortized* estimator of the posterior. That is, it learns $p(\boldsymbol{\theta} | \boldsymbol{x})$ for *any* value of $\boldsymbol{x}, in contrast with traditional sampling methods, were the inference pipeline must be rerun with the new data.
+One advantage of neural SBI algorithms is that the neural network is an *amortized* estimator of the posterior. That is, it learns $p(\boldsymbol{\theta} | \boldsymbol{x})$ for *any* value of $\boldsymbol{x}$, in contrast with traditional sampling methods, were the inference pipeline must be rerun with the new data.
 
 Amortization also makes it more viable to run expected coverage tests, which are a useful diagnostic tool to identify overconfident/underconfident estimators (see [2]).
 

@@ -699,6 +699,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../benchmarks/lotka_volterra/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lotka-Volterra
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../benchmarks/slcp/" class="md-nav__link">
         
   
@@ -834,7 +855,7 @@
 
 <h1 id="amortized_x_sequential_algorithms">Amortized x sequential algorithms<a class="headerlink" href="#amortized_x_sequential_algorithms" title="Permanent link">&para;</a></h1>
 <h2 id="amortization">Amortization<a class="headerlink" href="#amortization" title="Permanent link">&para;</a></h2>
-<p>One advantage of neural SBI algorithms is that the neural network is an <em>amortized</em> estimator of the posterior. That is, it learns <span class="arithmatex">\(p(\boldsymbol{\theta} | \boldsymbol{x})\)</span> for <em>any</em> value of $\boldsymbol{x}, in contrast with traditional sampling methods, were the inference pipeline must be rerun with the new data.</p>
+<p>One advantage of neural SBI algorithms is that the neural network is an <em>amortized</em> estimator of the posterior. That is, it learns <span class="arithmatex">\(p(\boldsymbol{\theta} | \boldsymbol{x})\)</span> for <em>any</em> value of <span class="arithmatex">\(\boldsymbol{x}\)</span>, in contrast with traditional sampling methods, were the inference pipeline must be rerun with the new data.</p>
 <p>Amortization also makes it more viable to run expected coverage tests, which are a useful diagnostic tool to identify overconfident/underconfident estimators (see [2]).</p>
 <h2 id="sequential_variants">Sequential variants<a class="headerlink" href="#sequential_variants" title="Permanent link">&para;</a></h2>
 <p>There are may be situations in which we do want to learn the posterior for only a particular observation <span class="arithmatex">\(\boldsymbol{x}_0\)</span>. In that case, there are strategies to employ to reduce the simulation budget required for learning the posterior in the neighbourhood of <span class="arithmatex">\(\boldsymbol{x}_0\)</span>.</p>

@@ -633,6 +633,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#what_if_we_observe_more_than_1_data_point" class="md-nav__link">
+    <span class="md-ellipsis">
+      What if we observe more than 1 data point?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
       References
@@ -767,6 +776,27 @@
   
   <span class="md-ellipsis">
     Gaussian Mixture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../benchmarks/lotka_volterra/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lotka-Volterra
   </span>
   
 
@@ -974,6 +1004,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#what_if_we_observe_more_than_1_data_point" class="md-nav__link">
+    <span class="md-ellipsis">
+      What if we observe more than 1 data point?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
       References
@@ -1065,41 +1104,44 @@ information and possible workarounds, please see
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">seed</span> <span class="o">=</span> <span class="mi">1998</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code>&lt;torch._C.Generator at 0x11254c210&gt;
+<div class="language-text highlight"><pre><span></span><code>&lt;torch._C.Generator at 0x10f2543d0&gt;
 </code></pre></div>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">torch.distributions</span> <span class="kn">import</span> <span class="n">Distribution</span><span class="p">,</span> <span class="n">MultivariateNormal</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">cov</span> <span class="o">=</span> <span class="mf">0.01</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">cov</span> <span class="o">=</span> <span class="mi">1</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">theta_loc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">theta_precision_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span> <span class="o">/</span> <span class="n">cov</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">x_precision_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span> <span class="o">/</span> <span class="n">cov</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">def</span> <span class="nf">get_prior</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Distribution</span><span class="p">:</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="c1"># Return the prior distribution</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="k">return</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">theta_loc</span><span class="p">,</span> <span class="n">precision_matrix</span><span class="o">=</span><span class="n">theta_precision_matrix</span><span class="p">)</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">def</span> <span class="nf">gaussian_linear_simulator</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="c1"># theta is a tensor of shape (num_samples, ndim)</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="k">return</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">precision_matrix</span><span class="o">=</span><span class="n">x_precision_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="k">def</span> <span class="nf">get_true_distribution</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultivariateNormal</span><span class="p">:</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    <span class="n">precision_matrix</span> <span class="o">=</span> <span class="n">theta_precision_matrix</span> <span class="o">+</span> <span class="n">x_precision_matrix</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="n">loc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">precision_matrix</span><span class="p">,</span> <span class="n">x_precision_matrix</span> <span class="o">@</span> <span class="n">x</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    <span class="k">return</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span> <span class="n">precision_matrix</span><span class="o">=</span><span class="n">precision_matrix</span><span class="p">)</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
-</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="k">def</span> <span class="nf">log_prob</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>    <span class="n">dist</span> <span class="o">=</span> <span class="n">get_true_distribution</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>    <span class="k">return</span> <span class="n">dist</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
-</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
-</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="k">def</span> <span class="nf">get_true_posterior_samples</span><span class="p">(</span><span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>    <span class="c1"># Return samples from the analytical posterior</span>
-</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>    <span class="n">dist</span> <span class="o">=</span> <span class="n">get_true_distribution</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>    <span class="k">return</span> <span class="n">dist</span><span class="o">.</span><span class="n">expand</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,))</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Precision matrix is the inverse of the covariance matrix</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">theta_precision_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span> <span class="o">/</span> <span class="n">cov</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">x_precision_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span> <span class="o">/</span> <span class="n">cov</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">def</span> <span class="nf">get_prior</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Distribution</span><span class="p">:</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="c1"># Return the prior distribution</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="k">return</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">theta_loc</span><span class="p">,</span> <span class="n">precision_matrix</span><span class="o">=</span><span class="n">theta_precision_matrix</span><span class="p">)</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="k">def</span> <span class="nf">gaussian_linear_simulator</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="c1"># theta is a tensor of shape (num_samples, ndim)</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="k">return</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">precision_matrix</span><span class="o">=</span><span class="n">x_precision_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="k">def</span> <span class="nf">get_true_distribution</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultivariateNormal</span><span class="p">:</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    <span class="c1"># Return the posterior analytical distribution</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="n">precision_matrix</span> <span class="o">=</span> <span class="n">theta_precision_matrix</span> <span class="o">+</span> <span class="n">x_precision_matrix</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    <span class="n">loc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">precision_matrix</span><span class="p">,</span> <span class="n">x_precision_matrix</span> <span class="o">@</span> <span class="n">x</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>    <span class="k">return</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span> <span class="n">precision_matrix</span><span class="o">=</span><span class="n">precision_matrix</span><span class="p">)</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="k">def</span> <span class="nf">log_prob</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>    <span class="n">dist</span> <span class="o">=</span> <span class="n">get_true_distribution</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>    <span class="k">return</span> <span class="n">dist</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
+</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="k">def</span> <span class="nf">get_true_posterior_samples</span><span class="p">(</span><span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>    <span class="c1"># Return samples from the analytical posterior</span>
+</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>    <span class="n">dist</span> <span class="o">=</span> <span class="n">get_true_distribution</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>    <span class="k">return</span> <span class="n">dist</span><span class="o">.</span><span class="n">expand</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,))</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
 </span></code></pre></div>
 <p>Let us define some utility functions which are going to be convenient for generating plots based on our samples:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span> <span class="nf">get_labels_for_var</span><span class="p">(</span><span class="n">var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
@@ -1122,17 +1164,17 @@ information and possible workarounds, please see
 </span></code></pre></div>
 <h3 id="visualizing_the_data">Visualizing the data<a class="headerlink" href="#visualizing_the_data" title="Permanent link">&para;</a></h3>
 <p>Let us use the <code>simulate_for_sbi</code> helper method to generate samples of <span class="arithmatex">\(\theta\)</span> and <span class="arithmatex">\(x\)</span>.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">num_simulations</span> <span class="o">=</span> <span class="mi">1000</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">num_simulations</span> <span class="o">=</span> <span class="mi">10000</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">theta</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">simulate_for_sbi</span><span class="p">(</span><span class="n">simulator</span><span class="p">,</span> <span class="n">proposal</span><span class="o">=</span><span class="n">prior</span><span class="p">,</span> <span class="n">num_simulations</span><span class="o">=</span><span class="n">num_simulations</span><span class="p">)</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">theta</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code>Running 1000 simulations.:   0%|          | 0/1000 [00:00&lt;?, ?it/s]
+<div class="language-text highlight"><pre><span></span><code>Running 10000 simulations.:   0%|          | 0/10000 [00:00&lt;?, ?it/s]
 
 
 
 
 
-(torch.Size([1000, 5]), torch.Size([1000, 5]))
+(torch.Size([10000, 5]), torch.Size([10000, 5]))
 </code></pre></div>
 <p>Density plots for our parameter samples:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">theta_labels</span> <span class="o">=</span> <span class="n">get_labels_for_var</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">theta&quot;</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)</span>
@@ -1164,7 +1206,7 @@ information and possible workarounds, please see
 </code></pre></div>
 <p>The output of prior + simulator is the set of samples</p>
 <div class="arithmatex">\[\{(\boldsymbol{\theta}_i, \boldsymbol{x}_i)\},\]</div>
-<p>for <span class="arithmatex">\(i=1, \ldots, N_{sim}\)</span>. This will be the data used for the training and validation of the neural network, which is are both taken care of by <code>sbi</code>. Higher simulation budgets <span class="arithmatex">\(N_{sim}\)</span> increase the training time of the network, but normally yield better approximations for the true posterior - although the scaling is not expected to be linear.</p>
+<p>for <span class="arithmatex">\(i=1, \ldots, N_{sim}\)</span>. This will be the data used for the training and validation of the neural network, which are both taken care of by <code>sbi</code>. Higher simulation budgets <span class="arithmatex">\(N_{sim}\)</span> increase the training time of the network, but normally yield better approximations for the true posterior - although the scaling is not expected to be linear.</p>
 <h3 id="simulator_sanity-checks">Simulator sanity-checks<a class="headerlink" href="#simulator_sanity-checks" title="Permanent link">&para;</a></h3>
 <p>Let us fix a fiducial <span class="arithmatex">\(\boldsymbol{\theta}_0\)</span> and use it as input to our simulator many times to get independent samples of <span class="arithmatex">\(\boldsymbol{x} \sim p(\boldsymbol{x} | \boldsymbol{\theta}_0)\)</span>, and see if we recover the expected normal distribution centered around <span class="arithmatex">\(\boldsymbol{\theta}_0\)</span>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">theta_0</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)</span>
@@ -1196,8 +1238,8 @@ information and possible workarounds, please see
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="s2">&quot;Data point&quot;</span><span class="p">:</span> <span class="n">fiducial_x</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">}</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code>{&#39;Fiducial theta&#39;: [0.122, -0.130, 0.202, -0.004, -0.035],
- &#39;Data point&#39;: [-0.036, -0.246, 0.333, -0.174, -0.120]}
+<div class="language-text highlight"><pre><span></span><code>{&#39;Fiducial theta&#39;: [-1.318, 0.442, -0.404, 0.294, 0.265],
+ &#39;Data point&#39;: [-1.126, 0.674, -1.601, 0.221, 0.372]}
 </code></pre></div>
 <h2 id="performing_simulation-based_inference">Performing Simulation-based inference<a class="headerlink" href="#performing_simulation-based_inference" title="Permanent link">&para;</a></h2>
 <h3 id="neural_posterior_estimation_npe">Neural Posterior Estimation (NPE)<a class="headerlink" href="#neural_posterior_estimation_npe" title="Permanent link">&para;</a></h3>
@@ -1224,49 +1266,50 @@ where the first term is recognized to be the conditional relative entropy betwee
 <p>A common implementation of the estimator <span class="arithmatex">\(q_{\boldsymbol{\phi}}(\boldsymbol{\theta} | \boldsymbol{x})\)</span> is with a <em>normalizing flow</em>. In a nutshell, a normalizing flow is based on the idea of a set of invertible and differentible transformations between two distributions. If we consider our generative model as a series of transformations from a simple distribution (e.g. a <em>prior</em>) to a complex distribution (e.g. the posterior), the normalizing flow will attempt to learn the <em>inverse</em> transformations. For a more formal discussion on the subject, we refer the reader to <a href="https://arxiv.org/abs/1908.09257">this review paper</a>.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span> <span class="nn">sbi.inference</span> <span class="kn">import</span> <span class="n">SNPE</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">inference</span> <span class="o">=</span> <span class="n">SNPE</span><span class="p">(</span><span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">)</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">inference</span><span class="o">.</span><span class="n">append_simulations</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">npe</span> <span class="o">=</span> <span class="n">SNPE</span><span class="p">(</span><span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">)</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">npe</span><span class="o">.</span><span class="n">append_simulations</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code>&lt;sbi.inference.snpe.snpe_c.SNPE_C at 0x157be57e0&gt;
+<div class="language-text highlight"><pre><span></span><code>&lt;sbi.inference.snpe.snpe_c.SNPE_C at 0x1548f85b0&gt;
 </code></pre></div>
 <p>We train the neural network with the <code>train</code> method. A number of arguments can be specified to tune the training hyperparameters (see the <a href="https://sbi-dev.github.io/sbi/reference/#sbi.inference.snpe.snpe_c.SNPE_C.train">docs</a>), but we will stick to their default values here.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="o">%%</span><span class="n">time</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">density_estimator</span> <span class="o">=</span> <span class="n">inference</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">npe_density_estimator</span> <span class="o">=</span> <span class="n">npe</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code> Neural network successfully converged after 56 epochs.CPU times: user 23.8 s, sys: 874 ms, total: 24.6 s
-Wall time: 15.7 s
+<div class="language-text highlight"><pre><span></span><code> Neural network successfully converged after 36 epochs.CPU times: user 2min 25s, sys: 3.25 s, total: 2min 28s
+Wall time: 1min 26s
 </code></pre></div>
 <p>The output of the training is the density estimator, which we can use to build the posterior:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">posterior</span> <span class="o">=</span> <span class="n">inference</span><span class="o">.</span><span class="n">build_posterior</span><span class="p">(</span><span class="n">density_estimator</span><span class="o">=</span><span class="n">density_estimator</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">npe_posterior</span> <span class="o">=</span> <span class="n">npe</span><span class="o">.</span><span class="n">build_posterior</span><span class="p">(</span><span class="n">density_estimator</span><span class="o">=</span><span class="n">npe_density_estimator</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Now that we have built an estimator for the posterior probability <span class="arithmatex">\(p(\boldsymbol{\theta} | \boldsymbol{x})\)</span>, we draw a fiducial pair <span class="arithmatex">\((\boldsymbol{\theta}_f, \boldsymbol{x}_f)\)</span> to serve as our observed data. In the last line, we use the <code>.sample</code> method to sample from the approximate posterior density.</p>
+<p>Now that we have built an estimator for the posterior probability <span class="arithmatex">\(p(\boldsymbol{\theta} | \boldsymbol{x})\)</span> and drawn a fiducial pair <span class="arithmatex">\((\boldsymbol{\theta}_f, \boldsymbol{x}_f)\)</span> to serve as our observed data, we can take posterior samples given <span class="arithmatex">\(\boldsymbol{x}_f\)</span>. In the last line, we use the <code>.sample</code> method to sample from the approximate posterior density.</p>
+<p>Notice that, for now, we will be using only one data point. Therefore, we don't expect the samples to be clustered around <span class="arithmatex">\(\boldsymbol{\theta}_f\)</span>, but rather the expected value of <span class="arithmatex">\(p(\boldsymbol{\theta} | \boldsymbol{x}_f)\)</span>, which is <span class="arithmatex">\(\boldsymbol{x}_f / 2\)</span>.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="o">%%</span><span class="n">time</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">num_samples</span> <span class="o">=</span> <span class="mi">1000</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">samples_from_npe</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,),</span> <span class="n">x</span><span class="o">=</span><span class="n">fiducial_x</span><span class="p">)</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">samples_from_npe</span> <span class="o">=</span> <span class="n">npe_posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,),</span> <span class="n">x</span><span class="o">=</span><span class="n">fiducial_x</span><span class="p">)</span>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code>Drawing 1000 posterior samples:   0%|          | 0/1000 [00:00&lt;?, ?it/s]
 
 
-CPU times: user 120 ms, sys: 9.42 ms, total: 129 ms
-Wall time: 127 ms
+CPU times: user 130 ms, sys: 11.5 ms, total: 142 ms
+Wall time: 89.1 ms
 </code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">plot_corner</span><span class="p">(</span><span class="n">theta_labels</span><span class="p">,</span> <span class="n">samples_from_npe</span><span class="p">,</span> <span class="n">fiducial_theta</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">plot_corner</span><span class="p">(</span><span class="n">theta_labels</span><span class="p">,</span> <span class="n">samples_from_npe</span><span class="p">,</span> <span class="n">fiducial_x</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 </span></code></pre></div>
 <p><img alt="png" src="../introduction_files/introduction_29_0.png" /></p>
 <h2 id="neural_likelihood_estimation_nle">Neural Likelihood Estimation (NLE)<a class="headerlink" href="#neural_likelihood_estimation_nle" title="Permanent link">&para;</a></h2>
 <p>Neural Likelihood Estimation (NLE) shares the same philosophy of NPE, but tries to learn the likelihood <span class="arithmatex">\(p(\boldsymbol{x} | \boldsymbol{\theta})\)</span> instead of the posterior. Let us redo the calculations with this method.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span> <span class="nn">sbi.inference</span> <span class="kn">import</span> <span class="n">SNLE</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">inference</span> <span class="o">=</span> <span class="n">SNLE</span><span class="p">(</span><span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">)</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="n">inference</span><span class="o">.</span><span class="n">append_simulations</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">nle</span> <span class="o">=</span> <span class="n">SNLE</span><span class="p">(</span><span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">)</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="n">nle</span><span class="o">.</span><span class="n">append_simulations</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code>&lt;sbi.inference.snle.snle_a.SNLE_A at 0x15b19d690&gt;
+<div class="language-text highlight"><pre><span></span><code>&lt;sbi.inference.snle.snle_a.SNLE_A at 0x1584484c0&gt;
 </code></pre></div>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="o">%%</span><span class="n">time</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">density_estimator</span> <span class="o">=</span> <span class="n">inference</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">nle_density_estimator</span> <span class="o">=</span> <span class="n">nle</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code> Neural network successfully converged after 35 epochs.CPU times: user 14.1 s, sys: 278 ms, total: 14.4 s
-Wall time: 8.16 s
+<div class="language-text highlight"><pre><span></span><code> Neural network successfully converged after 45 epochs.CPU times: user 3min 9s, sys: 4.14 s, total: 3min 13s
+Wall time: 1min 57s
 </code></pre></div>
 <p>The differences between NPE and NLE start to show once we have trained the neural network and want to build the posterior. The density estimator approximates the likelihood <span class="arithmatex">\(p(\boldsymbol{x} | \boldsymbol{\theta})\)</span>, therefore we need an additional computational step to obtain samples from the posterior <span class="arithmatex">\(p(\boldsymbol{x} | \boldsymbol{\theta}) p(\boldsymbol{\theta})\)</span>. This may be achieved with standard sampling methods, such as MCMC, rejection sampling, importance sampling, etc. In the context of our toy model, the procedure may seem redundant, as we know the analytical form of the likelihood. However, as we consider more complex models, for which the form of the likelihood is intractable, the SBI approach allows us to relax any analytical approximations (e.g. gaussian distribution) and let the neural network itself learn the non-linear mapping between <span class="arithmatex">\(\boldsymbol{\theta}\)</span> and <span class="arithmatex">\(\boldsymbol{x}\)</span>.</p>
 <p>We list below some of the sampling options implemented in the <code>sbi</code> package:</p>
@@ -1281,8 +1324,8 @@ Wall time: 8.16 s
 <li>Importance sampling</li>
 <li>Variational inference</li>
 </ul>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">posterior</span> <span class="o">=</span> <span class="n">inference</span><span class="o">.</span><span class="n">build_posterior</span><span class="p">(</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="n">density_estimator</span><span class="o">=</span><span class="n">density_estimator</span><span class="p">,</span> <span class="n">sample_with</span><span class="o">=</span><span class="s2">&quot;mcmc&quot;</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">nle_posterior</span> <span class="o">=</span> <span class="n">nle</span><span class="o">.</span><span class="n">build_posterior</span><span class="p">(</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="n">density_estimator</span><span class="o">=</span><span class="n">nle_density_estimator</span><span class="p">,</span> <span class="n">sample_with</span><span class="o">=</span><span class="s2">&quot;mcmc&quot;</span>
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="p">)</span>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code>/Users/bernardoveronese/miniconda3/envs/sbibench/lib/python3.10/site-packages/sbi/inference/posteriors/mcmc_posterior.py:114: UserWarning: The default value for thinning in MCMC sampling has been changed from 10 to 1. This might cause the results differ from the last benchmark.
@@ -1290,7 +1333,7 @@ Wall time: 8.16 s
 </code></pre></div>
 <p>Generating samples with MCMC:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="o">%%</span><span class="n">time</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">samples_from_nle</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,),</span> <span class="n">x</span><span class="o">=</span><span class="n">fiducial_x</span><span class="p">)</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">samples_from_nle</span> <span class="o">=</span> <span class="n">nle_posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,),</span> <span class="n">x</span><span class="o">=</span><span class="n">fiducial_x</span><span class="p">)</span>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code>  0%|          | 0/50 [00:00&lt;?, ?it/s]
 
@@ -1299,10 +1342,10 @@ Wall time: 8.16 s
   0%|          | 0/1200 [00:00&lt;?, ?it/s]
 
 
-CPU times: user 1min 17s, sys: 884 ms, total: 1min 18s
-Wall time: 1min 24s
+CPU times: user 1min 23s, sys: 985 ms, total: 1min 24s
+Wall time: 1min 30s
 </code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">plot_corner</span><span class="p">(</span><span class="n">theta_labels</span><span class="p">,</span> <span class="n">samples_from_nle</span><span class="p">,</span> <span class="n">fiducial_theta</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">plot_corner</span><span class="p">(</span><span class="n">theta_labels</span><span class="p">,</span> <span class="n">samples_from_nle</span><span class="p">,</span> <span class="n">fiducial_x</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 </span></code></pre></div>
 <p><img alt="png" src="../introduction_files/introduction_37_0.png" /></p>
 <h2 id="neural_ratio_estimation_nre">Neural Ratio Estimation (NRE)<a class="headerlink" href="#neural_ratio_estimation_nre" title="Permanent link">&para;</a></h2>
@@ -1339,22 +1382,22 @@ Wall time: 1min 24s
 \]</div>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">from</span> <span class="nn">sbi.inference</span> <span class="kn">import</span> <span class="n">SNRE</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="n">inference</span> <span class="o">=</span> <span class="n">SNRE</span><span class="p">(</span><span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">)</span>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">inference</span><span class="o">.</span><span class="n">append_simulations</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="n">nre</span> <span class="o">=</span> <span class="n">SNRE</span><span class="p">(</span><span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">)</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">nre</span><span class="o">.</span><span class="n">append_simulations</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code>&lt;sbi.inference.snre.snre_b.SNRE_B at 0x15bf88250&gt;
+<div class="language-text highlight"><pre><span></span><code>&lt;sbi.inference.snre.snre_b.SNRE_B at 0x157e1b2e0&gt;
 </code></pre></div>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="o">%%</span><span class="n">time</span> 
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">density_estimator</span> <span class="o">=</span> <span class="n">inference</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">ratio_estimator</span> <span class="o">=</span> <span class="n">nre</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code> Neural network successfully converged after 48 epochs.CPU times: user 9.79 s, sys: 302 ms, total: 10.1 s
-Wall time: 6.18 s
+<div class="language-text highlight"><pre><span></span><code> Neural network successfully converged after 40 epochs.CPU times: user 1min 9s, sys: 1.54 s, total: 1min 10s
+Wall time: 37.1 s
 </code></pre></div>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="o">%%</span><span class="n">time</span> 
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="n">posterior</span> <span class="o">=</span> <span class="n">inference</span><span class="o">.</span><span class="n">build_posterior</span><span class="p">(</span>
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>    <span class="n">density_estimator</span><span class="o">=</span><span class="n">density_estimator</span><span class="p">,</span> <span class="n">sample_with</span><span class="o">=</span><span class="s2">&quot;mcmc&quot;</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="n">nre_posterior</span> <span class="o">=</span> <span class="n">nre</span><span class="o">.</span><span class="n">build_posterior</span><span class="p">(</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>    <span class="n">density_estimator</span><span class="o">=</span><span class="n">ratio_estimator</span><span class="p">,</span> <span class="n">sample_with</span><span class="o">=</span><span class="s2">&quot;mcmc&quot;</span>
 </span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="p">)</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="n">samples_from_nre</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,),</span> <span class="n">x</span><span class="o">=</span><span class="n">fiducial_x</span><span class="p">)</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="n">samples_from_nre</span> <span class="o">=</span> <span class="n">nre_posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,),</span> <span class="n">x</span><span class="o">=</span><span class="n">fiducial_x</span><span class="p">)</span>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code>  0%|          | 0/50 [00:00&lt;?, ?it/s]
 
@@ -1363,16 +1406,16 @@ Wall time: 6.18 s
   0%|          | 0/1200 [00:00&lt;?, ?it/s]
 
 
-CPU times: user 35.5 s, sys: 670 ms, total: 36.2 s
-Wall time: 47.7 s
+CPU times: user 32.9 s, sys: 738 ms, total: 33.6 s
+Wall time: 42.2 s
 </code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">plot_corner</span><span class="p">(</span><span class="n">theta_labels</span><span class="p">,</span> <span class="n">samples_from_nre</span><span class="p">,</span> <span class="n">fiducial_theta</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">plot_corner</span><span class="p">(</span><span class="n">theta_labels</span><span class="p">,</span> <span class="n">samples_from_nre</span><span class="p">,</span> <span class="n">fiducial_x</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 </span></code></pre></div>
 <p><img alt="png" src="../introduction_files/introduction_42_0.png" /></p>
 <h2 id="analyzing_our_results">Analyzing our results<a class="headerlink" href="#analyzing_our_results" title="Permanent link">&para;</a></h2>
 <p>For comparison, we draw samples from the true posterior:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">samples_from_true_posterior</span> <span class="o">=</span> <span class="n">get_true_posterior_samples</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">fiducial_x</span><span class="p">)</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="n">plot_corner</span><span class="p">(</span><span class="n">theta_labels</span><span class="p">,</span> <span class="n">samples_from_true_posterior</span><span class="p">,</span> <span class="n">fiducial_theta</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="n">plot_corner</span><span class="p">(</span><span class="n">theta_labels</span><span class="p">,</span> <span class="n">samples_from_true_posterior</span><span class="p">,</span> <span class="n">fiducial_x</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 </span></code></pre></div>
 <p><img alt="png" src="../introduction_files/introduction_45_0.png" /></p>
 <p>We validate our results using the C2ST metric, where a classifier is trained to distinguish samples of the true posterior from samples of the estimated posterior and returns a score between 0.5 and 1. If the samples are indistinguishable, the classification performance should be random, and the returned score is 0.5. Higher scores indicate that the classifier is better able to learn to distinguish between the two sample populations.</p>
@@ -1389,8 +1432,45 @@ Wall time: 47.7 s
 </span><span id="__span-26-11"><a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="p">)</span>
 </span><span id="__span-26-12"><a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">c2st_scores</span><span class="p">)</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code>{&#39;NPE&#39;: tensor([0.6960]), &#39;NLE&#39;: tensor([0.6160]), &#39;NRE&#39;: tensor([0.6690])}
+<div class="language-text highlight"><pre><span></span><code>{&#39;NPE&#39;: tensor([0.5265]), &#39;NLE&#39;: tensor([0.5030]), &#39;NRE&#39;: tensor([0.5260])}
 </code></pre></div>
+<h2 id="what_if_we_observe_more_than_1_data_point">What if we observe more than 1 data point?<a class="headerlink" href="#what_if_we_observe_more_than_1_data_point" title="Permanent link">&para;</a></h2>
+<p>We now consider the situation where more data points were collected (in the sense of i.i.d samples from the observed population). While traditional sampling methods would require rerunning the inference pipeline with the new data, the same is not true for SBI: the neural network learns an approximate posterior which is <em>amortized</em> - in other words, it can take <em>any</em> data point <span class="arithmatex">\(\boldsymbol{x}\)</span> as argument, and not only the data that was used to train it.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="n">num_trials</span> <span class="o">=</span> <span class="mi">20</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="n">fiducial_x_iid</span> <span class="o">=</span> <span class="n">simulator</span><span class="p">(</span><span class="n">fiducial_theta</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">num_trials</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="n">fiducial_x_iid</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">fiducial_theta</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>(tensor([-1.0760,  0.4521, -0.0669,  0.1542,  0.2059]),
+ tensor([[-1.3185,  0.4415, -0.4042,  0.2936,  0.2653]]))
+</code></pre></div>
+<p>Let us use NRE to get posterior samples from <span class="arithmatex">\(p(\boldsymbol{\theta} | \{\boldsymbol{x}_i \})\)</span>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="n">mcmc_parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>    <span class="n">num_chains</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>    <span class="n">thin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>    <span class="n">warmup_steps</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>    <span class="n">init_strategy</span><span class="o">=</span><span class="s2">&quot;resample&quot;</span><span class="p">,</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="p">)</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="n">mcmc_method</span> <span class="o">=</span> <span class="s2">&quot;slice_np_vectorized&quot;</span>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="n">posterior</span> <span class="o">=</span> <span class="n">nle</span><span class="o">.</span><span class="n">build_posterior</span><span class="p">(</span>
+</span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>    <span class="n">density_estimator</span><span class="o">=</span><span class="n">nle_density_estimator</span><span class="p">,</span>
+</span><span id="__span-28-10"><a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>    <span class="n">mcmc_method</span><span class="o">=</span><span class="n">mcmc_method</span><span class="p">,</span>
+</span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>    <span class="n">mcmc_parameters</span><span class="o">=</span><span class="n">mcmc_parameters</span><span class="p">,</span>
+</span><span id="__span-28-12"><a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="p">)</span>
+</span><span id="__span-28-13"><a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="n">samples_from_nre_multiple_trials</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,),</span> <span class="n">x</span><span class="o">=</span><span class="n">fiducial_x_iid</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>Running vectorized MCMC with 50 chains:   0%|          | 0/26000 [00:00&lt;?, ?it/s]
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="n">plot_corner</span><span class="p">(</span><span class="n">theta_labels</span><span class="p">,</span> <span class="n">samples_from_nre_multiple_trials</span><span class="p">,</span> <span class="n">fiducial_theta</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+</span></code></pre></div>
+<p><img alt="png" src="../introduction_files/introduction_52_0.png" /></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="n">test_samples</span> <span class="o">=</span> <span class="n">MultivariateNormal</span><span class="p">(</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>    <span class="n">loc</span><span class="o">=</span><span class="n">fiducial_x_iid</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">num_trials</span><span class="p">),</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>    <span class="n">precision_matrix</span><span class="o">=</span><span class="p">(</span><span class="n">num_trials</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span> <span class="o">/</span> <span class="n">cov</span><span class="p">,</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,))</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="n">plot_corner</span><span class="p">(</span><span class="n">theta_labels</span><span class="p">,</span> <span class="n">test_samples</span><span class="p">,</span> <span class="n">fiducial_theta</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+</span></code></pre></div>
+<p><img alt="png" src="../introduction_files/introduction_54_0.png" /></p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <p>[1]: Cranmer, Kyle, Johann Brehmer, and Gilles Louppe. "The frontier of simulation-based inference." Proceedings of the National Academy of Sciences 117.48 (2020): 30055-30062.</p>
 <p>[2]: Tejero-Cantero, Alvaro, et al. "SBI--A toolkit for simulation-based inference." arXiv preprint arXiv:2007.09114 (2020).</p>

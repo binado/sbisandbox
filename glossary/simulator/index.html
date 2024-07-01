@@ -705,6 +705,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../benchmarks/lotka_volterra/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lotka-Volterra
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../benchmarks/slcp/" class="md-nav__link">
         
   
@@ -853,6 +874,13 @@
 <div class="arithmatex">\[ x = \theta + \sigma \varepsilon,\]</div>
 <p>where <span class="arithmatex">\(\varepsilon \sim \mathcal{N}(0, 1)\)</span>. This corresponds to the likelihood function</p>
 <div class="arithmatex">\[ \log p(x | \theta) \propto -\frac{1}{2} \left(\frac{x - \theta}{\sigma} \right)^2\]</div>
+<p>The corresponding forward model (prior + simulator) can be implemented in the following steps:</p>
+<ol>
+<li><span class="arithmatex">\(\theta \sim p(\theta)\)</span></li>
+<li><span class="arithmatex">\(\varepsilon \sim \mathcal{N}(0, 1)\)</span></li>
+<li><span class="arithmatex">\(x \leftarrow \theta + \sigma \varepsilon\)</span></li>
+<li><strong>return</strong> <span class="arithmatex">\((\theta, x)\)</span></li>
+</ol>
 
 
 

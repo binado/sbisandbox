@@ -7,6 +7,7 @@ from sbisandbox.benchmarks import (
     GaussianLinearBenchmark,
     GaussianLinearUniformBenchmark,
     GaussianMixtureBenchmark,
+    LotkaVolterraBenchmark,
     TwoMoonsBenchmark,
     SLCPBenchmark,
     __models__,
@@ -18,6 +19,7 @@ def get_model(model: str):
         GaussianLinearBenchmark,
         GaussianLinearUniformBenchmark,
         GaussianMixtureBenchmark,
+        LotkaVolterraBenchmark,
         TwoMoonsBenchmark,
         SLCPBenchmark,
     )

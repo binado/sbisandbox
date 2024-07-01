@@ -45,10 +45,12 @@ nav:
       - Gaussian Linear: benchmarks/gaussian_linear.md
       - Gaussian Linear Uniform: benchmarks/gaussian_linear_uniform.md
       - Gaussian Mixture: benchmarks/gaussian_mixture.md
+      - Lotka-Volterra: benchmarks/lotka_volterra.md
       - SLCP: benchmarks/slcp.md
       - Two Moons: benchmarks/two_moons.md
   - Resources: resources.md
 markdown_extensions:
+  - md_in_html
   - toc:
       permalink: true
       separator: "_"

@@ -2,102 +2,107 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://binado.github.io/sbisandbox/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/about/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/install/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/resources/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/benchmarks/gaussian_linear/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/benchmarks/gaussian_linear_uniform/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/benchmarks/gaussian_mixture/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/benchmarks/lotka_volterra/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/benchmarks/slcp/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/benchmarks/two_moons/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/glossary/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/glossary/amortization/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/glossary/nflow/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/glossary/nle/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/glossary/npe/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/glossary/nre/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/glossary/simulator/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/tutorials/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/tutorials/introduction/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://binado.github.io/sbisandbox/tutorials/mcmc/</loc>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://binado.github.io/sbisandbox/tutorials/twomoons/</loc>
-         <lastmod>2024-07-01</lastmod>
+         <lastmod>2024-07-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

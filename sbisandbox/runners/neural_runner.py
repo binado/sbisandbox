@@ -70,6 +70,7 @@ class NeuralRunner(Runner, ABC):
         training_kwargs: Optional[dict] = None,
         **kwargs,
     ):
+        assert num_rounds > 0, "num_rounds should be a positive integer"
         if num_rounds > 1 and x_0 is None:
             warn("Reference observation x_0 not set")
         self._start_training_clock()

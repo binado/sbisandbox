@@ -37,7 +37,7 @@ class SNPERunner(NeuralRunner):
         truncate_proposals = truncate_at is not None
         _training_kwargs = training_kwargs or {}
         _posterior_kwargs = posterior_kwargs or {}
-        theta, x = self.simulate(num_simulations, proposal=proposal)
+        theta, x = self.simulate(num_simulations, proposal=proposal, **kwargs)
         density_estimator = self._inference.append_simulations(
             theta, x, proposal=proposal
         ).train(force_first_round_loss=truncate_proposals, **_training_kwargs)

@@ -35,7 +35,7 @@ class SNRERunner(NeuralRunner):
     ):
         _training_kwargs = training_kwargs or {}
         _posterior_kwargs = posterior_kwargs or {}
-        theta, x = self.simulate(num_simulations, proposal=proposal)
+        theta, x = self.simulate(num_simulations, proposal=proposal, **kwargs)
         density_estimator = self._inference.append_simulations(theta, x).train(
             **_training_kwargs
         )

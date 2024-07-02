@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
+import torch
 from torch import Tensor
 from torch.distributions import Distribution
 import pyro
@@ -45,7 +46,7 @@ class Benchmark(ABC):
     ) -> Tensor:
         @pyro.poutine.condition(data={name: input})
         def _conditioned_model() -> Tensor:
-            with pyro.plate("data", input.shape[0]):
+            with pyro.plate("data", torch.atleast_2d(input).shape[0]):
                 return self._pyro_model()
 
         return _conditioned_model()

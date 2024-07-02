@@ -23,13 +23,13 @@ class GaussianMixtureBenchmark(UniformPriorMixin, Benchmark):
     where $\sigma_1 \gg \sigma_2 > 0$.
     """
 
-    def __init__(self, n: int = 2, cov_high: float = 1.0, cov_low: float = 0.01):
+    def __init__(self, n: int = 2, cov_high: float = 1.0, cov_low: float = 0.1):
         super().__init__(theta_event_shape=(n,), x_event_shape=(n,))
         self.prior_loc = torch.zeros(n)
         self.covariance_matrix = torch.eye(n)
         self.precision_matrix = torch.eye(n)
-        self.cov_high = torch.tensor(cov_high)
-        self.cov_low = torch.tensor(cov_low)
+        self.cov_high = cov_high * torch.ones(1)
+        self.cov_low = cov_low * torch.ones(1)
 
     @property
     def low(self):
@@ -42,12 +42,23 @@ class GaussianMixtureBenchmark(UniformPriorMixin, Benchmark):
     def _pyro_model(self):
         theta = pyro.sample("theta", self.prior)
         u = pyro.sample(
-            "u", dist.Categorical(0.5 * torch.ones(2)), infer={"enumerate": "parallel"}
+            "u",
+            dist.Categorical(probs=0.5 * torch.ones(2)),
+            infer={"enumerate": "parallel"},
         )
-        # cov = pyro.deterministic("cov", torch.where(u > 0.5, self.cov_high, self.cov_low))
-        cov = torch.where(u > 0.5, self.cov_high, self.cov_low)
+        shape = theta.shape[:-1]  # Batch shape
+        # When doing MCMC, u will be 2d because of enumerate parallel
+        # There's gotta be a cleaner fix to this
+        cov = torch.where(
+            u > 0.5,
+            self.cov_high,
+            self.cov_low,
+        ).view(shape + (u.shape if len(u.shape) > 1 else 2 * (1,)))
+        covariance_matrix = cov * self.covariance_matrix.expand(
+            shape + 2 * self.x_event_shape
+        )
         return pyro.sample(
-            "x", dist.MultivariateNormal(theta, cov * self.covariance_matrix)
+            "x", dist.MultivariateNormal(theta, covariance_matrix=covariance_matrix)
         )
 
     def get_posterior_samples(self, shape: Shape, x: Tensor) -> Tensor:

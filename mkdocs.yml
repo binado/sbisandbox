@@ -41,6 +41,7 @@ nav:
   - Tutorials:
       - Introduction: tutorials/introduction.md
       - Sequential x amortized: tutorials/twomoons.md
+      - Comparison with MCMC: tutorials/mcmc.md
   - Benchmarks:
       - Gaussian Linear: benchmarks/gaussian_linear.md
       - Gaussian Linear Uniform: benchmarks/gaussian_linear_uniform.md

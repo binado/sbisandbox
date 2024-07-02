@@ -10,6 +10,7 @@ __models__ = (
     "Gaussian Linear",
     "Gaussian Linear Uniform",
     "Gaussian Mixture",
-    "Lokta Volterra" "Two Moons",
+    "Lotka Volterra",
+    "Two Moons",
     "SLCP",
 )
